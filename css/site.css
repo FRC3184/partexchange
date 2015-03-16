@@ -1,0 +1,35 @@
+html, body {
+  height: 100%;
+}
+
+#wrap {
+  min-height: 85%;
+}
+
+#main {
+  overflow:auto;
+  padding-bottom:3em; /* this needs to be bigger than footer height*/
+}
+
+.footer {
+  position: relative;
+  margin-top: -2em; /* negative value of footer height */
+  height: 2em;
+  clear:both;
+  padding-top:0px;
+  background-color:#CF8300;
+} 
+body {
+    text-align:center;
+}
+th {
+	text-align:center;
+}
+.unverified {
+	border: 3px solid #FF5252;
+}
+
+/* td, th {
+padding-left: 64px !important;
+padding-right: 64px !important;
+} */
