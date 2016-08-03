@@ -5,7 +5,7 @@ if (isset($_GET['id']) and isset($_SESSION['logged']) and $_SESSION['logged'] an
      
     $name = "".$dbHost . "\\" . $dbInstance . ",1433";
 	try {
-	$conn = new PDO( "sqlsrv:server=$name;", $dbRW, $dbRWPw);
+	$conn = new PDO( "mysql:host=$dbHost;dbname=$dbInstance", $dbRW, $dbRWPw);
 	$conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
 	}
 	catch (Exception $e) {

@@ -11,7 +11,7 @@
         }
         $name = "".$dbHost . "\\" . $dbInstance . ",1433";
 		try {
-		$conn = new PDO( "sqlsrv:server=$name;", $dbAccess, $dbAccessPw);
+		$conn = new PDO( "mysql:host=$dbHost;dbname=$dbInstance", $dbAccess, $dbAccessPw);
 		$conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
 		}
 		catch (Exception $e) {

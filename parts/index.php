@@ -11,7 +11,7 @@
         include("../lib/dbinfo.php");
 		$name = "".$dbHost . "\\" . $dbInstance . ",1433";
 		try {
-		$conn = new PDO( "sqlsrv:server=$name;", $dbAccess, $dbAccessPw);
+		$conn = new PDO( "mysql:host=$dbHost;dbname=$dbInstance", $dbAccess, $dbAccessPw);
 		$conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
 		}
 		catch (Exception $e) {
@@ -78,12 +78,8 @@
 		}
         
         $result = $conn->query("
-		SELECT *
-		FROM (
-			SELECT *, ROW_NUMBER() OVER (ORDER BY request_date DESC) AS RowNum
-			FROM requests ".$ver."
-		) AS MyDerivedTable
-		WHERE MyDerivedTable.RowNum BETWEEN ".$start." AND ".($start+$perPage)." AND supply_team_id IS NULL
+		SELECT * FROM requests WHERE supply_team_id IS NULL ORDER BY request_date DESC
+		LIMIT ".$start.", ".($start+$perPage)."
 		");
         while($row = $result->fetch(PDO::FETCH_ASSOC)) {
             

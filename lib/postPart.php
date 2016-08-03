@@ -28,7 +28,7 @@ if(isset($_POST['submit']) and isset($_SESSION['logged']) and $_SESSION['logged'
      
     $name = "".$dbHost . "\\" . $dbInstance . ",1433";
 	try {
-	$conn = new PDO( "sqlsrv:server=$name;", $dbRW, $dbRWPw);
+	$conn = new PDO( "mysql:host=$dbHost;dbname=$dbInstance", $dbRW, $dbRWPw);
 	$conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
 	}
 	catch (Exception $e) {
@@ -42,7 +42,7 @@ if(isset($_POST['submit']) and isset($_SESSION['logged']) and $_SESSION['logged'
     $comma = FALSE;
     echo sizeof($_FILES);
     
-    $values .= "'".$_SESSION["teamID"]."', GETDATE(), ";
+    $values .= "'".$_SESSION["teamID"]."', NOW(), ";
     $fields .="request_teamID, request_date, ";
     
     if (strlen($_POST['shortDesc']) > 0) {

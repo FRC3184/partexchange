@@ -20,7 +20,7 @@
             include("../lib/dbinfo.php");
             $name = "".$dbHost . "\\" . $dbInstance . ",1433";
 			try {
-			$conn = new PDO( "sqlsrv:server=$name;", $dbAccess, $dbAccessPw);
+			$conn = new PDO( "mysql:host=$dbHost;dbname=$dbInstance", $dbAccess, $dbAccessPw);
 			$conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
 			}
 			catch (Exception $e) {
@@ -37,7 +37,7 @@
             }
             if (isset($_GET['print'])) {
                 echo '<img style="position:absolute;right:0;top:0px;width:32px;height:32px;" src="/profile/default.png" />';
-                echo '<img style="position:absolute;right:0;top:32px;width:32px;height:32px;" src="/profile/3184.png" />';
+                echo '<img style="position:absolute;right:0;top:32px;width:32px;height:32px;" src="/3184.png" />';
                 
             }
             echo '
@@ -78,7 +78,7 @@
             include("../lib/dbinfo.php");
             $name = "".$dbHost . "\\" . $dbInstance . ",1433";
 			try {
-			$conn = new PDO( "sqlsrv:server=$name;", $dbAccess, $dbAccessPw);
+			$conn = new PDO( "mysql:host=$dbHost;dbname=$dbInstance", $dbAccess, $dbAccessPw);
 			$conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
 			}
 			catch (Exception $e) {
@@ -95,7 +95,7 @@
             }
             if (isset($_GET['print'])) {
                 echo '<img style="position:absolute;right:0;top:0;width:32px;height:32px;" src="/profile/default.png" />';
-                echo '<img style="position:absolute;right:0;top:32px;width:32px;height:32px;" src="/profile/3184.png" />';
+                echo '<img style="position:absolute;right:0;top:32px;width:32px;height:32px;" src="/3184.png" />';
                 
             }
         
@@ -137,7 +137,7 @@
         }
     }
     ?>
-    
-    <?php include '../lib/foot.html'; ?>
+  
+    <?php if (!isset($_GET['print'])) {include '../lib/foot.html'; } ?>
 </body>
 </html>

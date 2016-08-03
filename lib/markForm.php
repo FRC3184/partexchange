@@ -9,7 +9,7 @@ if(isset($_POST['username'])){
      
     $name = "".$dbHost . "\\" . $dbInstance . ",1433";
 	try {
-	$conn = new PDO( "sqlsrv:server=$name;", $dbRW, $dbRWPw);
+	$conn = new PDO( "mysql:host=$dbHost;dbname=$dbInstance", $dbRW, $dbRWPw);
 	$conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
 	}
 	catch (Exception $e) {
@@ -24,7 +24,7 @@ if(isset($_POST['username'])){
         idrequests=".$conn->quote($_POST['id']))->fetchColumn() != 1){ 
         header("Location: part.php?id=".$_POST['id']."&err=1");
     }
-    $conn->query("UPDATE requests SET supply_team_id='".$_POST['username']."', fulfilled_date=GETDATE() WHERE idrequests='".$_POST['id']."';"); 
+    $conn->query("UPDATE requests SET supply_team_id='".$_POST['username']."', fulfilled_date=NOW() WHERE idrequests='".$_POST['id']."';"); 
     header("Location: ../parts/part.php?id=".$_POST['id']);
     
 }else{    //If the form button wasn't submitted go to the index page, or login page 

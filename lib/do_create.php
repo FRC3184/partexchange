@@ -39,7 +39,7 @@ if(!empty($_POST)){
     
     $name = "".$dbHost . "\\" . $dbInstance . ",1433";
 	try {
-	$conn = new PDO( "sqlsrv:server=$name;", $dbRW, $dbRWPw);
+	$conn = new PDO( "mysql:host=$dbHost;dbname=$dbInstance", $dbRW, $dbRWPw);
 	$conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
 	}
 	catch (Exception $e) {
