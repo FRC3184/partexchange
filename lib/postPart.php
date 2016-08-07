@@ -1,4 +1,6 @@
 <?php
+include 'mailVars.php';
+require 'mail.php';
 session_start();
 if(isset($_POST['submit']) and isset($_SESSION['logged']) and $_SESSION['logged']){
      
@@ -114,6 +116,21 @@ if(isset($_POST['submit']) and isset($_SESSION['logged']) and $_SESSION['logged'
     
     echo $dbQuery;
     $result = $conn->query($dbQuery); 
+    $email = setupMail();
+    $email->setFrom("part-notify@parts.blazerobotics.org");
+    foreach ($mailRecipients as $addr) {
+	    $email->addAddress($addr);
+    }
+    $email->isHTML(true);
+
+    $email->Subject = "New part posted to exchange";
+    $email->Body = 'Team '. $_SESSION["teamID"].' posted a new part.<br /><a href="parts.nickschatz.com/parts/part.php?id=' . ($rows+1) . '">Click here to view</a>';
+
+    $res = send($email);
+    if ($res) {
+	    die($res);
+    }
+
     header("Location: ../parts/index.php");
     }
     else {
