@@ -28,7 +28,7 @@
             <a href="http://www.usfirst.org/roboticsprograms/frc"><img src="/profile/default.png" alt="FIRST Logo" /></a>
         </div>
         <div class="col-lg-4">
-            <a href="http://blazerobotics.org"><img src="/3184.png" alt="Blaze Robotics" /></a>
+            <a href="http://blazerobotics.org"><img height="256" width="256" src="/3184.png" alt="Blaze Robotics" /></a>
         </div>
       </div>
       <?php } else { ?>

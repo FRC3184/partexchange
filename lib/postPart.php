@@ -123,8 +123,8 @@ if(isset($_POST['submit']) and isset($_SESSION['logged']) and $_SESSION['logged'
     }
     $email->isHTML(true);
 
-    $email->Subject = "New part posted to exchange";
-    $email->Body = 'Team '. $_SESSION["teamID"].' posted a new part.<br /><a href="parts.nickschatz.com/parts/part.php?id=' . ($rows+1) . '">Click here to view</a>';
+    $email->Subject = "Team " . $_SESSION['teamID'] . " requested a part: " . $_POST['shortDesc'];
+    $email->Body = $_POST['longDesc'] . '<br /><a href="parts.nickschatz.com/parts/part.php?id=' . ($rows+1) . '">Click here to view</a>';
 
     $res = send($email);
     if ($res) {
