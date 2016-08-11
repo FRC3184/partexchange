@@ -67,6 +67,12 @@
         
         if ($logged and $row['supply_team_id'] == '' and $row["request_teamID"] == $_SESSION['teamID']) {?>
             <!-- Button trigger modal -->
+		    <div>
+		    <a href="/lib/deletePart.php?id=<?php echo $_GET['id']; ?>" class="btn btn-primary" onclick="">
+			Delete Listing
+                    </a> 
+		    </div>
+		    <br />
                     <div>
                     <button class="btn btn-primary" data-toggle="modal" data-target="#myModal">
                       Mark Request As Filled

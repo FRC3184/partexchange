@@ -72,13 +72,13 @@
         
         
       
-        $ver = "WHERE verified=1";
+        $ver = " AND verified=1";
 		if ($logged and $_SESSION['level'] >= 1) {
 			$ver = "";
 		}
         
         $result = $conn->query("
-		SELECT * FROM requests WHERE supply_team_id IS NULL ORDER BY request_date DESC
+		SELECT * FROM requests WHERE supply_team_id IS NULL".$ver." ORDER BY request_date DESC
 		LIMIT ".$start.", ".($start+$perPage)."
 		");
         while($row = $result->fetch(PDO::FETCH_ASSOC)) {
