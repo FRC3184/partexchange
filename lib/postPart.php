@@ -134,7 +134,7 @@ if(isset($_POST['submit']) and isset($_SESSION['logged']) and $_SESSION['logged'
     header("Location: ../parts/index.php");
     }
     else {
-        header("Location: /account/create.php?err=1&txt=" . $resp->$errorCodes[0]);
+        header("Location: /parts/request.php?err=1&txt=" . $resp->$errorCodes[0]);
         exit;
     }
 }else{    //If the form button wasn't submitted go to the index page, or login page 

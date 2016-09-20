@@ -71,6 +71,9 @@
       <div class="form-group">
         <div class="g-recaptcha" data-sitekey="6LcXGfwSAAAAACkoABhkFZWun5IgorYz0qgysE0K"></div>
       </div>
+      <div class="form-group">
+      <span id="tos-warning">By clicking "Create Account" you agree to the <a href="/tos.php">Terms of Service</a> for the site</span>
+      </div>
       <div class="col-lg-10 col-lg-offset-2">
             <input name="submt" type="submit" value="Create Account" class="btn btn-primary" />
         </div>
