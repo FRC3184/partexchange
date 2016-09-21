@@ -54,16 +54,11 @@
         </div>
         <div class="panel-body">
               <img class="img-thumbnail" src="<?php echo $pic; ?>" alt="Profile Picture" title="Profile Picture" style="width:256px;height:256px;float:left;"/>
-              <div style="float:right;">
+              <div style="float:right;" id="team-contact-info">
               <?php 
               if ($foundTeam) {
-                  echo "Email: <a href=\"mailto:".$email."\">" . $email . "</a><br />";
-                  if ($teamTwitter !== NULL) {
-                    echo "Twitter: <a href=\"http://twitter.com/" . $teamTwitter . "\">@".$teamTwitter."</a><br />";
-                  }
-                  if ($teamWebsite !== NULL) {
-                    echo "Website: <a href=\"" . $teamWebsite . "\">".$teamWebsite."</a><br />";
-                  }
+                echo '<button id="show-team-contact-info">Show contact information</button>';
+                  
                   
               }
               else {
@@ -73,7 +68,15 @@
               </div>
         </div>
     </div>
+
     
     <?php include '../lib/foot.html'; ?>
+    <script type="text/javascript">
+      $("#show-team-contact-info").click(function() {
+        $.get("/account/contact.php?team=<?php echo $teamId; ?>").success(function(data) {
+          $("#team-contact-info").html(data);
+        });
+      });
+    </script>
 </body>
 </html>
