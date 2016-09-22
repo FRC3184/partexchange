@@ -2,8 +2,8 @@
 <html>
 <head>
     <?php
-        
-        $teamName = $email = $teamId = $teamTwitter = $pic = $website = NULL;
+
+        $teamName = $email = $teamId = $teamTwitter = $pic = $website = $teamZipcode = NULL;
         include("../lib/vars.php");
         include("../lib/dbinfo.php");
         if (!$logged) {
@@ -16,18 +16,19 @@
 		}
 		catch (Exception $e) {
 			die( print_r( $e->getMessage(), true));
-		} 
-        $sql = $conn->query("SELECT * FROM teams 
-        WHERE teamId=".$conn->quote($_SESSION['teamID'])); 
-        if($conn->query("SELECT COUNT(*) FROM teams 
-        WHERE teamId=".$conn->quote($_SESSION['teamID']))->fetchColumn() == 1){ 
+		}
+        $sql = $conn->query("SELECT * FROM teams
+        WHERE teamId=".$conn->quote($_SESSION['teamID']));
+        if($conn->query("SELECT COUNT(*) FROM teams
+        WHERE teamId=".$conn->quote($_SESSION['teamID']))->fetchColumn() == 1){
             $row = $sql->fetch();
-            global $teamName, $email, $teamId, $teamTwitter, $pic, $website;
+            global $teamName, $email, $teamId, $teamTwitter, $pic, $website, $teamZipcode;
             $teamName = $row['teamName'];
             $email = $row['email'];
             $teamId = $row['teamId'];
             $teamTwitter = $row['twitter'];
             $teamWebsite = $row['website'];
+            $teamZipcode = $row['zipcode'];
             if ($row['has_profile_pic'] == 0) {
                 $pic = "../profile/default.png";
             } else {
@@ -41,7 +42,7 @@
 </head>
 <body>
     <?php include '../lib/navbar.php'; ?>
-        
+
 	<?php
         if (isset($_GET['err'])) {
             if ($_GET['err'] == 0) {
@@ -80,9 +81,9 @@
         </div>
         <div class="panel-body">
               <img class="img-thumbnail" src="<?php echo $pic; ?>" alt="Profile Picture" title="Profile Picture" style="width:256px;height:256px;float:left;"/>
-              <div style="float:right;display:block;">
+              <div style="float:right;display:block;width:40%">
               <form role="form" id="changeActInfoForm" action="update.php" method="post" enctype="multipart/form-data">
-              <div class="panel-group" id="accordion">			      
+              <div class="panel-group" id="accordion">
                   <div class="panel panel-default">
                     <div class="panel-heading">
                       <h4 class="panel-title">
@@ -95,7 +96,8 @@
                       <div class="panel-body">
                         <div class="form-group">
                             <input name="email" name="emailAddress" type="email" class="form-control" id="email" placeholder="Email Address">
-                          </div>
+                            <div class="help-block with-errors"></div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -116,9 +118,12 @@
                     </div>
                     <div id="collapseTwo" class="panel-collapse collapse">
                       <div class="panel-body">
-                        
+
                             <div class="form-group">
-                                <input type="text" name="twitter" class="form-control" id="twitter" title="Omit @" placeholder="Enter Twitter Handle">
+                              <div class="input-group">
+                                <span class="input-group-addon">@</span>
+                                <input type="text" name="twitter" class="form-control" id="twitter" placeholder="Enter Twitter Handle">
+                              </div>
                             </div>
                         </div>
                     </div>
@@ -141,9 +146,10 @@
                     <div id="collapseThree" class="panel-collapse collapse">
                       <div class="panel-body">
                         <div class="form-group">
-                                <input type="text" name="website" class="form-control" id="website" title="Please include http://" placeholder="Enter Website">
-                            </div>
+                          <input type="url" name="website" class="form-control" id="website" placeholder="Enter Website" />
+                          <div class="help-block with-errors"></div>
                         </div>
+                      </div>
                     </div>
                   </div>
                   <div class="panel panel-default">
@@ -173,54 +179,57 @@
                     <div id="changePassword" class="panel-collapse collapse">
                       <div class="panel-body">
                         <div class="form-group">
-                                <label for="oldpass">Old Password</label><input type="password" name="oldpass" class="form-control" id="oldpass">
-								<label for="newpass">New Password</label><input type="password" name="newpass" class="form-control" id="newpass">
-								<label for="confirmpass">Confirm New Password</label><input type="password" name="confirmpass" class="form-control" id="confirmpass">
+                                <label for="oldpass">Old Password</label>
+                                <input type="password" name="oldpass" class="form-control" id="oldpass">
+								                <label for="newpass">New Password</label>
+                                <input type="password" name="newpass" class="form-control" id="newpass">
+							                  <label for="confirmpass">Confirm New Password</label>
+                                <input data-match="#newpass" type="password" name="confirmpass" class="form-control" id="confirmpass">
+                                <div class="help-block with-errors"></div>
                             </div>
                         </div>
                         </div>
                     </div>
+                    <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <h4 class="panel-title">
+                          <a data-toggle="collapse" data-parent="#accordion" href="#setZipcode">
+                            <?php
+                            if ($teamZipcode !== NULL) {
+                              echo "Zipcode: ". $teamZipcode;
+                            }
+                            else {
+                              echo "Zipcode: <i>Not Set.</i>";
+                            }
+                            ?>
+                          </a>
+                        </h4>
+                      </div>
+                      <div id="setZipcode" class="panel-collapse collapse">
+                        <div class="panel-body">
+                          <div class="form-group">
+                                <input data-error="Invalid zipcode format" class="form-control" pattern="\d+"
+                                type="text" name="zipcode" class="form-control" id="zipcode" placeholder="Zipcode">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                          </div>
+                      </div>
+                    </div>
                   </div>
-                
+
                 <input name="submt" type="submit" value="Update" class="btn btn-primary" />
                 </form>
                 <a href="team.php?id=<?php echo $_SESSION['teamID']; ?>">Public Profile</a>
 				</div>
         </div>
     </div>
-    
-    
+
+
     <?php include '../lib/foot.html'; ?>
-    
+
+    <script type="text/javascript" src="/js/validator.min.js"></script>
     <script type="text/javascript">
-        $("#twitter").tooltip({"trigger":"focus hover"});
-        $("#website").tooltip({"trigger":"focus hover"});
-        $(document).ready(function() {
-    $('#changeActInfoForm').bootstrapValidator({
-        // To use feedback icons, ensure that you use Bootstrap v3.1.0 or later
-        feedbackIcons: {
-            valid: 'glyphicon glyphicon-ok',
-            invalid: 'glyphicon glyphicon-remove',
-            validating: 'glyphicon glyphicon-refresh'
-        },
-        fields: {
-            email: {
-                validators: {
-                    emailAddress: {
-                        message: 'The email address is not valid'
-                    }
-                }
-            },
-            website: {
-                validators: {
-                    uri: {
-                        message: 'Not a valid URL'
-                    }
-                }
-            }
-        }
-    });
-});
+        $("#changeActInfoForm").validator();
     </script>
 </body>
 </html>

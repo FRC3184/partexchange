@@ -13,7 +13,7 @@
       <div class="jumbotron">
         <h1>FRC Parts Exchange</h1>
         <p class="lead">This is a site designed to encourage cooperation between FRC teams by lending parts. Built by Team 3184 Blaze Robotics, the site is currently aimed at Minnesota teams.</p>
-        <p><a class="btn btn-lg btn-success" href="/getting_started.php" role="button">Let's Get Started &raquo;</a></p>
+        <p><a class="btn btn-lg btn-success" href="/getting_started.php" role="button">Get Started &raquo;</a></p>
       </div>
 
 

@@ -1,11 +1,11 @@
-<?php 
+<?php
 include "../lib/vars.php";
 if (!$logged) {
     //header("Location: login.php");
     echo "not logged in";
 }
 
-if(!empty($_POST)){ 
+if(!empty($_POST)){
     print_r($_POST);
     include "../lib/dbinfo.php";
     $name = "".$dbHost . "\\" . $dbInstance . ",1433";
@@ -15,18 +15,18 @@ if(!empty($_POST)){
 	}
 	catch (Exception $e) {
 		die( print_r( $e->getMessage(), true));
-	} 
+	}
     $dbQuery = "UPDATE teams SET ";
     $comma = FALSE;
     echo sizeof($_FILES);
-    
+
     if (strlen($_POST['email']) > 0) {
         //Verify email
         if (preg_match("/^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,9}|[0-9]{1,3})(\]?)$/", $_POST["email"]) !== 1) {
             header("Location: index.php?err=0");
             exit;
-        }   
-        $values .= "email=" . $conn->quote($_POST['email']);
+        }
+        $dbQuery .= "email=" . $conn->quote($_POST['email']);
         $comma = TRUE;
     }
     if (strlen($_POST['twitter']) > 0) {
@@ -34,7 +34,7 @@ if(!empty($_POST)){
             $dbQuery .= ",";
         }
         $dbQuery .= "twitter=".$conn->quote($_POST['twitter']);
-        
+
         $comma = TRUE;
     }
     if (strlen($_POST['website']) > 0) {
@@ -42,11 +42,20 @@ if(!empty($_POST)){
             $dbQuery .= ",";
         }
         $dbQuery .= "website=".$conn->quote($_POST['website']);
-        
+
         $comma = TRUE;
-        
+
     }
-	
+    if (strlen($_POST['zipcode']) > 0) {
+        if ($comma) {
+            $dbQuery .= ",";
+        }
+        $dbQuery .= "zipcode=".$conn->quote($_POST['zipcode']);
+
+        $comma = TRUE;
+
+    }
+
     if (file_exists($_FILES['picture']['tmp_name']) || is_uploaded_file($_FILES['picture']['tmp_name'])) {
         $allowedExts = array("gif", "jpeg", "jpg", "png");
         $temp = explode(".", $_FILES["picture"]["name"]);
@@ -71,7 +80,7 @@ if(!empty($_POST)){
                 $dbQuery .= ",";
             }
             $dbQuery .= "has_profile_pic=1";
-            
+
             $comma = TRUE;
           }
         } else {
@@ -90,16 +99,16 @@ if(!empty($_POST)){
 			}
 		}
 		$pas = hash("sha256", $_POST['oldpass']);
-		if($conn->query("SELECT COUNT(*) FROM teams 
-        WHERE teamId=".$conn->quote($_SESSION['teamID'])." AND 
+		if($conn->query("SELECT COUNT(*) FROM teams
+        WHERE teamId=".$conn->quote($_SESSION['teamID'])." AND
         password='".$pas."';")->fetchColumn() == 1) {
 			if ($comma) {
 				$dbQuery .= ",";
 			}
-			
-			
+
+
 			$dbQuery .= "password='".hash("sha256", $_POST['newpass'])."'";
-			
+
 			$comma = TRUE;
 		}
 		else {
@@ -109,14 +118,14 @@ if(!empty($_POST)){
 				exit;
 			}
 		}
-		
-        
-        
+
+
+
     }
     $dbQuery .= " WHERE teamId='" . $_SESSION['teamID'] . "';";
-    
+
     echo "<br>".$dbQuery."<br>";
-    $result = $conn->query($dbQuery); 
+    $result = $conn->query($dbQuery);
 	if ($err) {
 		header("Location: index.php?err=1");
 		exit;
@@ -125,9 +134,9 @@ if(!empty($_POST)){
 		header("Location: index.php");
 		exit;
 	}
-    
-}else{    //If the form button wasn't submitted go to the index page, or login page 
+
+}else{    //If the form button wasn't submitted go to the index page, or login page
     header("Location: index.php");
-    exit; 
-} 
+    exit;
+}
 ?>

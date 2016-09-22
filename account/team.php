@@ -18,12 +18,12 @@
 		}
 		catch (Exception $e) {
 			die( print_r( $e->getMessage(), true));
-		} 
-        $sql = $conn->query("SELECT * FROM teams 
-        WHERE teamId=".$conn->quote($_GET['id']).""); 
-        if($conn->query("SELECT COUNT(*) FROM teams 
-        WHERE teamId=".$conn->quote($_GET['id'])."")->fetchColumn() == 1){ 
-            $row = $sql->fetch(); 
+		}
+        $sql = $conn->query("SELECT * FROM teams
+        WHERE teamId=".$conn->quote($_GET['id'])."");
+        if($conn->query("SELECT COUNT(*) FROM teams
+        WHERE teamId=".$conn->quote($_GET['id'])."")->fetchColumn() == 1){
+            $row = $sql->fetch();
             global $teamName, $email, $teamId, $teamTwitter, $pic, $website;
             $teamName = $row['teamName'];
             $email = $row['email'];
@@ -47,7 +47,7 @@
 </head>
 <body>
     <?php include '../lib/navbar.php'; ?>
-        
+
     <div class="panel panel-primary">
         <div class="panel-heading">
             <h3 class="panel-title"><?php echo $teamName; ?></h3>
@@ -55,11 +55,11 @@
         <div class="panel-body">
               <img class="img-thumbnail" src="<?php echo $pic; ?>" alt="Profile Picture" title="Profile Picture" style="width:256px;height:256px;float:left;"/>
               <div style="float:right;" id="team-contact-info">
-              <?php 
+              <?php
               if ($foundTeam) {
-                echo '<button id="show-team-contact-info">Show contact information</button>';
-                  
-                  
+                echo '<button class="btn btn-primary" id="show-team-contact-info">Show contact information</button>';
+
+
               }
               else {
                 echo "Couldn't find this team. If this is your team, you can <a href=\"create.php\">create an account</a>.";
@@ -69,7 +69,7 @@
         </div>
     </div>
 
-    
+
     <?php include '../lib/foot.html'; ?>
     <script type="text/javascript">
       $("#show-team-contact-info").click(function() {
