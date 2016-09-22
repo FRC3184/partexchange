@@ -30,15 +30,23 @@
     $token = $_GET['token'];
     $content = "<form id='reset-pass' action='reset_password.php' method='post'>
                 <input name='token' type='hidden' value='".$token."' />
-                <input class='form-control' name='password' id='password' type='password' placeholder='Enter new password' />
-                <input class='form-control' name='verify_pass' id='verify_pass' type='password' placeholder='Repeat password' />
-                <div class=\"col-lg-10 col-lg-offset-2\">
-                    <input name='submt' type='submit' value='Reset Password' class='btn btn-primary' />
+                <div class='form-group'>
+                  <input required class='form-control' name='password' id='password'
+                  type='password' placeholder='Enter new password' />
+                </div>
+                <div class='form-group'>
+                  <input required data-match='#password' data-match-error='Passwords must match'
+                  class='form-control' name='verify_pass' id='verify_pass'
+                  type='password' placeholder='Repeat password' />
+                  <div class='help-block with-errors'></div>
+                </div>
+                <div class='form-group'>
+                  <input name='submt' type='submit' value='Reset Password' class='btn btn-primary' />
                 </div>
                 </form>";
   }
   else {
-    //header("Location: index.php");
+    header("Location: index.php");
     die();
   }
 ?>
@@ -65,52 +73,9 @@
 
 
     <?php include '../lib/foot.html'; ?>
+    <script type="text/javascript" src="/js/validator.min.js"></script>
     <script type="text/javascript">
-    $(document).ready(function() {
-      if ($("#reset-pass").length) {
-        $('#reset-pass').bootstrapValidator({
-            // To use feedback icons, ensure that you use Bootstrap v3.1.0 or later
-            feedbackIcons: {
-                valid: 'glyphicon glyphicon-ok',
-                invalid: 'glyphicon glyphicon-remove',
-                validating: 'glyphicon glyphicon-refresh'
-            },
-            fields: {
-              password: {
-                validators: {
-                  notEmpty: {
-                      message: 'The password is required and cannot be empty'
-                  },
-                  stringLength: {
-                      min: 3,
-                      message: 'The password must have at least 3 characters'
-                  },
-                  identical: {
-                      field: 'verify_pass',
-                      message: 'Passwords must match'
-                  }
-                }
-              },
-              verify_pass: {
-                validators: {
-                  notEmpty: {
-                      message: 'The password is required and cannot be empty'
-                  },
-                  stringLength: {
-                      min: 3,
-                      message: 'The password must have at least 3 characters'
-                  },
-                  identical: {
-                      field: 'password',
-                      message: 'Passwords must match'
-                  }
-                }
-              }
-            }
-
-          });
-      }
-    });
+      $("#reset-pass").validator();
     </script>
 </body>
 </html>
