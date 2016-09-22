@@ -7,7 +7,7 @@ function setupMail() {
 
 	$mail = new PHPMailer;
 
-	$mail->SMTPDebug = 3;                               // Enable verbose debug output
+	$mail->SMTPDebug = 0;                               // Disable debug
 
 	$mail->isSMTP();                                      // Set mailer to use SMTP
 	$mail->Host = $mailHost;  // Specify main and backup SMTP servers
