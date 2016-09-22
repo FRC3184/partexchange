@@ -15,29 +15,28 @@
         <li><a href="/">Home</a></li>
         <li><a href="/parts/">Open Part Requests</a></li>
         <li><a href="/parts/request.php">Request a Part</a></li>
-        <?php 
+        <?php
         include("vars.php");
-        if($logged){ 
-            echo '<li class="dropdown">
-                      <a href="#" class="dropdown-toggle" data-toggle="dropdown">'.$_SESSION['teamName'].' <b class="caret"></b></a>
-                      <ul class="dropdown-menu">
-                        <li><a href="/account/">Account</a></li>
-                        <li><a href="/account/history.php?opt=req">Your Requested Parts</a></li>
-                        <li><a href="/account/history.php?opt=filled">Your Filled Requests</a></li>
-                        <li class="divider"></li>
-                        <li><a href="/account/logout.php">Log Out</a></li>
-                      </ul>
-                    </li>';
+        if($logged){
+          echo '<li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">'.$_SESSION['teamName'].' <b class="caret"></b></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="/account/">Account</a></li>
+                    <li><a href="/account/history.php?opt=req">Your Requested Parts</a></li>
+                    <li><a href="/account/history.php?opt=filled">Your Filled Requests</a></li>
+                    <li class="divider"></li>
+                    <li><a href="/account/logout.php">Log Out</a></li>
+                  </ul>
+                </li>';
         }
         else {
-            echo '<li><a href="/account/login.php">Login</a></li>';
+          echo '<li><a href="/account/login.php">Login</a></li>';
         }
         ?>
-        
+
       </ul>
     </div><!--/.nav-collapse -->
   </div>
 </div>
 <div id="wrap">
 <section id="main" class="container clear-top">
-    

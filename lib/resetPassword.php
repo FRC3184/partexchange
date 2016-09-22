@@ -43,23 +43,21 @@ if (isset($_GET['team'])) {
 <html>
 <head>
 
-    <title>Reset Password</title>
+  <title>Reset Password</title>
 
-    <?php include("head.html"); ?>
+  <?php include("head.html"); ?>
 </head>
 <body>
-    <?php include 'navbar.php'; ?>
+  <?php include 'navbar.php'; ?>
 
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            <h3 class="panel-title">Reset Password</h3>
-        </div>
-        <div class="panel-body">
-          <?php echo $content; ?>
-        </div>
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h3 class="panel-title">Reset Password</h3>
     </div>
-
-
-    <?php include 'foot.html'; ?>
+    <div class="panel-body">
+      <?php echo $content; ?>
+    </div>
+  </div>
+  <?php include 'foot.html'; ?>
 </body>
 </html>
