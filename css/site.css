@@ -15,24 +15,20 @@ html, body {
   position: relative;
   margin-top: -2em; /* negative value of footer height */
   height: 2em;
-  clear:both;
-  padding-top:0px;
-  background-color:#CF8300;
-}
-body {
-    text-align:center;
-}
-th {
-	text-align:center;
-}
-.unverified {
-	border: 3px solid #FF5252;
-}
-.input-group-addon {
-  width:auto;
+  clear: both;
+  padding-top: 0px;
+  background-color: #CF8300;
 }
 
-/* td, th {
-padding-left: 64px !important;
-padding-right: 64px !important;
-} */
+body {
+  text-align: center;
+}
+th {
+  text-align: center;
+}
+.unverified {
+  border: 3px solid #FF5252;
+}
+.input-group-addon {
+  width: auto;
+}
