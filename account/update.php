@@ -5,7 +5,7 @@ if (!$logged) {
   echo "Not logged in";
 }
 
-if(!empty($_POST)) {
+if (!empty($_POST)) {
   include "../lib/dbinfo.php";
   $name = "".$dbHost . "\\" . $dbInstance . ",1433";
   try {
@@ -86,7 +86,7 @@ if(!empty($_POST)) {
     if ($_POST['newpass'] != $_POST['confirmpass']) {
       $err = TRUE;
       if (!$comma) {
-        header("Location: index.php?err=2");
+				header("Location: index.php?err=2");
         exit;
       }
     }
@@ -94,7 +94,7 @@ if(!empty($_POST)) {
     if ($conn->query("SELECT COUNT(*) FROM teams
                      WHERE teamId=".$conn->quote($_SESSION['teamID'])." AND
                      password='".$pas."';")->fetchColumn() == 1) {
-      if ($comma) {
+			if ($comma) {
         $dbQuery .= ",";
       }
 
