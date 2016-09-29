@@ -41,7 +41,7 @@
         echo '<img style="position:absolute;right:0;top:32px;width:32px;height:32px;" src="/3184.png" />';
       }
       echo '
-            <h2>Team '.$_SESSION['teamID'].' Requested Parts ' . (!isset($_GET['print']) ? '&nbsp;
+            <h2>Parts requested by '.$_SESSION['teamName'].' ' . (!isset($_GET['print']) ? '&nbsp;
             <a href="history.php?opt=req&print=true">Print</a>' : '') . '</h2>
             <h3>Total: '.$conn->query("SELECT COUNT(*) FROM requests WHERE request_teamID='" . $_SESSION['teamID'] ."'
                                        AND verified=1")->fetchColumn().'</h3>
@@ -97,7 +97,7 @@
       }
 
       echo '
-            <h2>Requests you have filled' . (!isset($_GET['print']) ? '&nbsp;
+            <h2>Requests filled by ' . $_SESSION["teamName"] . ' ' . (!isset($_GET['print']) ? '&nbsp;
             <a href="history.php?opt=filled&print=true">Print</a>' : '') . '</h2>
             <h3>Total: '.$conn->query("SELECT COUNT(*) FROM requests WHERE
                                        supply_team_id='" . $_SESSION['teamID'] . "'")->fetchColumn().'</h3>
