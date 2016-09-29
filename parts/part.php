@@ -62,7 +62,8 @@
                 </div><br />';
         }
 
-        if ($logged and $row['supply_team_id'] == '' and $row["request_teamID"] == $_SESSION['teamID']) {
+        if ($logged and (($row['supply_team_id'] == '' and $row["request_teamID"] == $_SESSION['teamID'])
+                         or $_SESSION['level'] >= 1)) {
         ?>
             <!-- Button trigger modal -->
         <div>

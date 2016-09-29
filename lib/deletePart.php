@@ -10,9 +10,9 @@ if (isset($_SESSION['logged']) and $_SESSION['logged'] and isset($_GET['id']) an
   catch (Exception $e) {
     die( print_r( $e->getMessage(), true));
   }
-  $dbQuery = "DELETE FROM requests WHERE request_teamID=".$_SESSION['teamID']." AND idrequests=".$conn->quote($_GET['id']);
+  $dbQuery = "DELETE FROM requests WHERE idrequests=".$conn->quote($_GET['id']) .
+             " AND (request_teamID=".$_SESSION['teamID']." OR " .$_SESSION['level'].">=1)";
   $conn->query($dbQuery);
 }
 header("Location: /parts/");
 ?>
-
