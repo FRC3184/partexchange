@@ -22,14 +22,14 @@
     die( print_r( $e->getMessage(), true));
   }
 
-  $query = "SELECT * FROM requests WHERE idrequests=" . $conn->quote($_GET['id']) . " AND verified=1;";
-  $queryCount = "SELECT COUNT(*) FROM requests WHERE idrequests=" . $conn->quote($_GET['id']) . " AND verified=1;";
-  if ($logged and $_SESSION['level'] >= 1) {
-    $query = "SELECT * FROM requests WHERE idrequests=" . $conn->quote($_GET['id']);
-    $queryCount = "SELECT COUNT(*) FROM requests WHERE idrequests=" . $conn->quote($_GET['id']) . ";";
+  $ver = " AND verified=1";
+  if ($logged) {
+    $ver = " AND (verified=1 OR ".$_SESSION['level'].">=1 OR request_teamID='".$_SESSION['teamID']."')";
   }
+
+  $query = "SELECT * FROM requests WHERE idrequests=" . $conn->quote($_GET['id']) . $ver;
   $result = $conn->query($query);
-  if ($conn->query($queryCount)->fetchColumn() == 1) {
+  if (sizeof($result) == 1) {
   ?>
       <div class="panel panel-primary">
       <div class="panel-heading">

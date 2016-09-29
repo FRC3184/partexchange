@@ -69,15 +69,15 @@
 
       <?php
       $ver = " AND verified=1";
-      if ($logged and $_SESSION['level'] >= 1) {
-        $ver = "";
+      if ($logged) {
+        $ver = " AND (verified=1 OR ".$_SESSION['level'].">=1 OR request_teamID='".$_SESSION['teamID']."')";
       }
 
       $result = $conn->query("SELECT * FROM requests WHERE supply_team_id IS NULL".$ver." ORDER BY request_date DESC
                               LIMIT ".$start.", ".($start+$perPage));
       while($row = $result->fetch(PDO::FETCH_ASSOC)) {
 
-        if ($logged and $_SESSION['level'] >= 1 && $row["verified"] != 1) {
+        if ($row["verified"] != 1) {
           echo "<tr class='unverified'>";
         } else {
           echo "<tr>";
