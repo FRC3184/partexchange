@@ -48,7 +48,10 @@
   $optionsNext="?p=" . ($curPage-1);
   $options="";
   if (isset($_GET['pp'])) {
-    $options="&pp=" . $perPage;
+    $options = "&pp=" . $perPage;
+  }
+  if (isset($_GET['like'])) {
+    $options .= "&like=" . $_GET['like'];
   }
 
   echo '
@@ -57,6 +60,20 @@
           <li class="next ' . $oldest . '"><a href="index.php'.$optionsPrev.$options.'">Older →</a></li>
         </ul>';
   ?>
+  <form method="GET" action="index.php">
+    <div class="input-group" style="display: inline-block">
+      <input value="<?php echo isset($_GET['like']) ? $_GET['like'] : ''; ?>" type="text" name="like"
+             class="form-control" style="width: 55%; max-width: 20em;" placeholder="Title" />
+      <input value="<?php echo isset($_GET['team']) ? $_GET['team'] : ''; ?>" type="text" name="team"
+             class="form-control" style="width: 20%; max-width: 6em;" placeholder="Team #" />
+      <?php
+      if (isset($_GET['pp'])) {
+        echo "<input type='hidden' value='".$perPage."' name='pp'>";
+      }
+      ?>
+      <input type="submit" value="Search" class="btn btn-primary">
+    </div>
+  </form>
   <table class="table table-striped table-hover ">
     <thead>
       <tr>
@@ -68,13 +85,23 @@
     <tbody>
 
       <?php
+      $like = "";
+      if (isset($_GET['like']) and $_GET['like']) {
+        $like = " AND description LIKE " . $conn->quote("%".$_GET['like']."%");
+      }
+
+      $team = "";
+      if (isset($_GET['team']) and $_GET['team']) {
+        $like = " AND request_teamID=" . $conn->quote($_GET['team']);
+      }
+
       $ver = " AND verified=1";
       if ($logged) {
         $ver = " AND (verified=1 OR ".$_SESSION['level'].">=1 OR request_teamID='".$_SESSION['teamID']."')";
       }
 
-      $result = $conn->query("SELECT * FROM requests WHERE supply_team_id IS NULL".$ver." ORDER BY request_date DESC
-                              LIMIT ".$start.", ".($start+$perPage));
+      $result = $conn->query("SELECT * FROM requests WHERE supply_team_id IS NULL".$like.$ver.$team." ORDER BY
+      request_date DESC, idrequests DESC LIMIT ".$start.", ".($start+$perPage));
       while($row = $result->fetch(PDO::FETCH_ASSOC)) {
 
         if ($row["verified"] != 1) {
