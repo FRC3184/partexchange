@@ -50,6 +50,13 @@ if (!empty($_POST)) {
     $comma = TRUE;
   }
 
+  //Gets emails
+  if ($comma) {
+    $dbQuery .= ",";
+  }
+  $dbQuery .= "gets_emails=".(isset($_POST['gets_emails']) ? 1 : 0);
+  $comma = TRUE;
+
   if (file_exists($_FILES['picture']['tmp_name']) || is_uploaded_file($_FILES['picture']['tmp_name'])) {
     $allowedExts = array("gif", "jpeg", "jpg", "png");
     $temp = explode(".", $_FILES["picture"]["name"]);

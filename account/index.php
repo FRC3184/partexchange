@@ -28,6 +28,7 @@
     $teamTwitter = $row['twitter'];
     $teamWebsite = $row['website'];
     $teamZipcode = $row['zipcode'];
+    $teamGetsEmails = $row['gets_emails'] == 1;
     if ($row['has_profile_pic'] == 0) {
       $pic = "../profile/default.png";
     } else {
@@ -97,6 +98,11 @@
                   <div class="form-group">
                     <input name="email" name="emailAddress" type="email" class="form-control" id="email" placeholder="Email Address">
                     <div class="help-block with-errors"></div>
+                  </div>
+
+                  <div class="form-group">
+                    <input type="checkbox" id="gets_emails" name="gets_emails" <?php echo $teamGetsEmails ? "checked" : ""; ?>>
+                    <label for="gets_emails">Receive emails from the site?</label>
                   </div>
                 </div>
               </div>
