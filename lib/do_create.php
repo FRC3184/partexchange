@@ -55,8 +55,18 @@ if (!empty($_POST)) {
       header("Location: /account/create.php?err=3");
       exit;
     }
-    $query = "INSERT INTO teams (teamId, teamName, email, password) VALUES ('" . $_POST["teamNumber"] . "','" .
-              $_POST["teamName"] . "','" . $_POST["email"] . "','" . hash('sha256', $_POST['password1']) . "');";
+
+    include 'region.php';
+    //Verify district/region
+    $region = $_POST['region'];
+    if (!isValidRegion($region)) {
+      header("Location: /account/create.php?err=5");
+      exit;
+    }
+    //TODO figure out this quoting thing
+    $query = "INSERT INTO teams (teamId, teamName, email, password, region) VALUES ('" . $_POST["teamNumber"] . "','" .
+              $_POST["teamName"] . "','" . $_POST["email"] . "','" . hash('sha256', $_POST['password1']) .
+              "', '".$region . "');";
     $sql = $conn->query($query);
     header("Location: /account/login.php");
   }

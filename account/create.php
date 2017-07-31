@@ -34,6 +34,9 @@
     if ($_GET['err'] == "4") {
       print_error("Please retry the captcha.");
     }
+    if ($_GET['err'] == "5") {
+      print_error("Invalid district/region selected.");
+    }
   }
   ?>
 
@@ -46,6 +49,17 @@
     <div class="form-group">
       <label for="inputTeamName">Team Name</label>
       <input required name="teamName" type="text" class="form-control" id="inputTeamName" placeholder="Team Name">
+      <div class="help-block with-errors"></div>
+    </div>
+    <div class="form-group">
+      <label for="inputRegion">Region</label>
+      Choose district, state/province, or country.
+      <select required name="region" class="form-control" id="inputRegion">
+        <?php
+        include "../lib/region.php";
+        printRegionSelect("", False);
+        ?>
+      </select>
       <div class="help-block with-errors"></div>
     </div>
     <div class="form-group">

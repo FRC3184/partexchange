@@ -61,17 +61,23 @@
         </ul>';
   ?>
   <form method="GET" action="index.php">
-    <div class="input-group" style="display: inline-block">
+    <div class="input-group" style="display: inline-flex; width:100%; justify-content:center;">
       <input value="<?php echo isset($_GET['like']) ? $_GET['like'] : ''; ?>" type="text" name="like"
-             class="form-control" style="width: 55%; max-width: 20em;" placeholder="Title" />
+             class="form-control" style="width: 45%; max-width: 20em;" placeholder="Title" />
       <input value="<?php echo isset($_GET['team']) ? $_GET['team'] : ''; ?>" type="text" name="team"
              class="form-control" style="width: 20%; max-width: 6em;" placeholder="Team #" />
+      <select name="region" class="form-control" style="width: 30%; max-width: 9em;">
+        <?php
+        include "../lib/region.php";
+        printRegionSelect(isset($_GET['region']) ? $_GET['region'] : '', True);
+        ?>
+      </select>
       <?php
       if (isset($_GET['pp'])) {
         echo "<input type='hidden' value='".$perPage."' name='pp'>";
       }
       ?>
-      <input type="submit" value="Search" class="btn btn-primary">
+      <input type="submit" value="Search" class="btn btn-primary" style="float:left">
     </div>
   </form>
   <table class="table table-striped table-hover ">
@@ -92,7 +98,13 @@
 
       $team = "";
       if (isset($_GET['team']) and $_GET['team']) {
-        $like = " AND request_teamID=" . $conn->quote($_GET['team']);
+        $team = " AND request_teamID=" . $conn->quote($_GET['team']);
+      }
+
+      $region = "";
+      if (isset($_GET['region']) and $_GET['region']) {
+        $region =
+          " AND " . $conn->quote($_GET['region']) . " = (SELECT region FROM teams WHERE teamId = request_teamID)";
       }
 
       $ver = " AND verified=1";
@@ -100,7 +112,7 @@
         $ver = " AND (verified=1 OR ".$_SESSION['level'].">=1 OR request_teamID='".$_SESSION['teamID']."')";
       }
 
-      $result = $conn->query("SELECT * FROM requests WHERE supply_team_id IS NULL".$like.$ver.$team." ORDER BY
+      $result = $conn->query("SELECT * FROM requests WHERE supply_team_id IS NULL".$like.$ver.$team.$region." ORDER BY
       request_date DESC, idrequests DESC LIMIT ".$start.", ".($start+$perPage));
       while($row = $result->fetch(PDO::FETCH_ASSOC)) {
 

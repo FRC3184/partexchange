@@ -1,5 +1,6 @@
 <?php
 include "../lib/dbinfo.php";
+include "../lib/region.php";
 if (isset($_GET['team'])) {
 	$teamId = $_GET['team'];
 	try {
@@ -9,7 +10,7 @@ if (isset($_GET['team'])) {
 	catch (Exception $e) {
 		die( print_r( $e->getMessage(), true));
 	}
-  $sql = $conn->query("SELECT email, twitter, website, zipcode FROM teams
+  $sql = $conn->query("SELECT email, twitter, website, zipcode, region FROM teams
     					         WHERE teamId=".$conn->quote($teamId)."");
   if ($conn->query("SELECT COUNT(*) FROM teams WHERE teamId=".$conn->quote($teamId)."")->fetchColumn() == 1) {
     $row = $sql->fetch();
@@ -17,8 +18,10 @@ if (isset($_GET['team'])) {
     $teamTwitter = $row['twitter'];
     $teamWebsite = $row['website'];
     $teamZipcode = $row['zipcode'];
+    $teamRegion = $row['region'];
 
     echo "Email: <a href=\"mailto:".$email."\">" . $email . "</a><br />";
+    echo "Region: " . getRegionName($teamRegion) . "<br />";
 		if ($teamTwitter !== NULL) {
 			echo "Twitter: <a href=\"http://twitter.com/" . $teamTwitter . "\">@".$teamTwitter."</a><br />";
 		}
