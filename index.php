@@ -14,7 +14,8 @@
   ?>
     <div class="jumbotron">
       <h1>FRC Parts Exchange</h1>
-      <p class="lead">This is a site designed to encourage cooperation between FRC teams by lending parts. Built by Team 3184 Blaze Robotics, the site is currently aimed at Minnesota teams.</p>
+      <p class="lead">This site connects FRC teams that need parts with teams that have parts.
+        Are VersaPlanetary gearboxes out of stock again? Another team in your area may have what you need.</p>
       <p><a class="btn btn-lg btn-success" href="/getting_started.php" role="button">Get Started &raquo;</a></p>
     </div>
 
@@ -22,8 +23,8 @@
       <div class="col-lg-4">
         <h2>Why?</h2>
         <b>To encourage "coopertition" between FRC teams.</b>
-        <p>Many FRC teams exchange parts both during and outside of competitions. We wanted to help be giving everyone a place to easily do that and keep track of it.</p>
-        <p><a class="btn btn-primary" href="http://www.firstinspires.org/about/vision-and-mission" role="button">Read More &raquo;</a></p>
+        <p>Many FRC teams exchange parts both during and outside of competitions. We wanted to help by making it easier to exchange parts and keep track of your generosity.</p>
+        <p><a class="btn btn-primary" href="http://www.firstinspires.org/about/vision-and-mission" role="button">Read About Coopertition &raquo;</a></p>
       </div>
       <div class="col-lg-4">
         <a href="http://www.firstinspires.org/robotics/frc"><img src="/profile/default.png" alt="FIRST Logo" /></a>
