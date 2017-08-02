@@ -32,3 +32,10 @@ th {
 .input-group-addon {
   width: auto;
 }
+
+.clickable-row {
+  cursor:pointer;
+}
+.click-indicator {
+  text-decoration: underline;
+}

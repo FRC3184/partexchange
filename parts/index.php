@@ -116,17 +116,13 @@
       request_date DESC, idrequests DESC LIMIT ".$start.", ".($start+$perPage));
       while($row = $result->fetch(PDO::FETCH_ASSOC)) {
 
-        if ($row["verified"] != 1) {
-          echo "<tr class='unverified'>";
-        } else {
-          echo "<tr>";
-        }
-          echo "<td>" . $row["request_date"] . "</td>";
-          echo "<td>Team " . $row["request_teamID"] . "</td>";
-          echo "<td>" . $row["description"] . "</td>";
-          echo '<td><a href="part.php?id='.$row['idrequests'].'" target="_blank">See More</a></td>';
-          echo "</tr>";
-
+        printf("<tr class='clickable-row%s' data-href='part.php?id=%d'>",
+               ($row['verified'] == 1 ? "" : " unverified"), $row['idrequests']);
+        echo "<td>" . $row["request_date"] . "</td>";
+        echo "<td>Team " . $row["request_teamID"] . "</td>";
+        echo "<td>" . $row["description"] . "</td>";
+        echo '<td class="click-indicator">Show More</td>';
+        echo "</tr>";
       }
       ?>
 
@@ -141,5 +137,12 @@
   ?>
 
   <?php include '../lib/foot.html'; ?>
+  <script>
+  jQuery(document).ready(function($) {
+    $(".clickable-row").click(function() {
+      window.open($(this).data("href"), "_blank");
+    });
+  });
+  </script>
 </body>
 </html>
