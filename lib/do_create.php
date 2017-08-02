@@ -1,8 +1,7 @@
 <?php
 if (!empty($_POST)) {
   require_once('recaptchalib.php');
-  $siteKey = "6LcXGfwSAAAAACkoABhkFZWun5IgorYz0qgysE0K";
-  $secret = "6LcXGfwSAAAAABnW3eS2I_xUIPCHTJp-3L52E4bX";
+  include "dbinfo.php";
   // reCAPTCHA supported 40+ languages listed here: https://developers.google.com/recaptcha/docs/language
   $lang = "en";
 
@@ -11,7 +10,7 @@ if (!empty($_POST)) {
   // The error code from reCAPTCHA, if any
   $error = null;
 
-  $reCaptcha = new ReCaptcha($secret);
+  $reCaptcha = new ReCaptcha($recap_secret);
 
   // Was there a reCAPTCHA response?
   if ($_POST["g-recaptcha-response"]) {
@@ -22,7 +21,7 @@ if (!empty($_POST)) {
   }
   if ($resp != null && $resp->success) {
 
-    include "dbinfo.php";
+
 
     //Verify passwords
     if (strcmp($_POST['password1'], $_POST['password2']) !== 0) {

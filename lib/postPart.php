@@ -1,12 +1,11 @@
 <?php
-include 'mailVars.php';
 require 'mail.php';
+require "dbinfo.php";
 session_start();
-if(isset($_POST['submit']) and isset($_SESSION['logged']) and $_SESSION['logged']){
+if(isset($_SESSION['logged']) and $_SESSION['logged']){
+
 
   require_once('recaptchalib.php');
-  $siteKey = "6LcXGfwSAAAAACkoABhkFZWun5IgorYz0qgysE0K";
-  $secret = "6LcXGfwSAAAAABnW3eS2I_xUIPCHTJp-3L52E4bX";
   // reCAPTCHA supported 40+ languages listed here: https://developers.google.com/recaptcha/docs/language
   $lang = "en";
 
@@ -15,7 +14,7 @@ if(isset($_POST['submit']) and isset($_SESSION['logged']) and $_SESSION['logged'
   // The error code from reCAPTCHA, if any
   $error = null;
 
-  $reCaptcha = new ReCaptcha($secret);
+  $reCaptcha = new ReCaptcha($recap_secret);
 
   // Was there a reCAPTCHA response?
   if ($_POST["g-recaptcha-response"]) {
@@ -26,7 +25,7 @@ if(isset($_POST['submit']) and isset($_SESSION['logged']) and $_SESSION['logged'
   }
   if ($resp != null && $resp->success) {
 
-  include "dbinfo.php";
+
 
   $name = "".$dbHost . "\\" . $dbInstance . ",1433";
   try {

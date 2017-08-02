@@ -76,14 +76,17 @@
       <div class="help-block with-errors"></div>
     </div>
     <div class="form-group">
-      <div class="g-recaptcha" data-sitekey="6LcXGfwSAAAAACkoABhkFZWun5IgorYz0qgysE0K"></div>
-    </div>
-    <div class="form-group">
       <span id="tos-warning">By clicking "Create Account" you agree to the <a href="/tos.php">Terms of Service</a> for the site</span>
     </div>
     <div class="col-lg-10 col-lg-offset-2">
-          <input name="submt" type="submit" value="Create Account" class="btn btn-primary" />
-      </div>
+      <button class="btn btn-primary g-recaptcha" data-sitekey="6LdmZSsUAAAAAKASLeW7JE5w7M1F-5eYxZMbVe8G"
+              data-callback="submit_form">Submit</button>
+    </div>
+    <script>
+    function submit_form() {
+      $("#createActForm").submit();
+    }
+    </script>
   </form>
 
   <?php include '../lib/foot.html'; ?>

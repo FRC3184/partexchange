@@ -43,7 +43,7 @@
           }
         }
         ?>
-        <form action="../lib/postPart.php" method="post" enctype="multipart/form-data">
+        <form action="../lib/postPart.php" method="post" enctype="multipart/form-data" id="part_form">
           <div class="form-group">
             <input placeholder="Title" name="shortDesc" type="text" class="form-control" id="inputSDesc" autocomplete="off">
 
@@ -61,13 +61,16 @@
             <input type="file" name="image" class="form-control" id="image-upload" accept="image/*">
 
           </div>
-          <div class="form-group">
-            <div class="g-recaptcha" data-sitekey="6LcXGfwSAAAAACkoABhkFZWun5IgorYz0qgysE0K"></div>
-          </div>
 
           <div class="col-lg-10 col-lg-offset-2">
-              <input name="submit" type="submit" class="btn btn-primary" />
+            <button class="btn btn-primary g-recaptcha" data-sitekey="6LdmZSsUAAAAAKASLeW7JE5w7M1F-5eYxZMbVe8G"
+                    data-callback="submit_form">Submit</button>
           </div>
+          <script>
+          function submit_form() {
+            $("#part_form").submit();
+          }
+          </script>
         </form>
       </div>
   <?php
