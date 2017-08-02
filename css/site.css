@@ -36,6 +36,7 @@ th {
 .clickable-row {
   cursor:pointer;
 }
+
 .click-indicator {
   text-decoration: underline;
 }
@@ -44,7 +45,36 @@ th {
   display: flex;
   flex-direction: column;
 }
+
 #login-form .form-group {
   margin: auto;
   max-width: 35em;
+}
+
+.act-view {
+  display: flex;
+  justify-content: space-between;
+}
+@media only screen and (max-width: 500px) {
+  .act-view {
+    flex-wrap: wrap;
+  }
+  .contact-row {
+    width: 100%;
+  }
+}
+
+.act-view > div {
+  display: inline-flex;
+  width: 100%;
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+
+.act-view > div > form, .act-view > div > button {
+  align-self: flex-end;
+}
+.contact-row {
+  display: block;
+  align-self: flex-end;
 }

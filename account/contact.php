@@ -20,16 +20,16 @@ if (isset($_GET['team'])) {
     $teamZipcode = $row['zipcode'];
     $teamRegion = $row['region'];
 
-    echo "Email: <a href=\"mailto:".$email."\">" . $email . "</a><br />";
-    echo "Region: " . getRegionName($teamRegion) . "<br />";
+    echo "<span class='contact-row'>Email: <a href=\"mailto:".$email."\">" . $email . "</a></span>";
+    echo "<span class='contact-row'>Region: " . getRegionName($teamRegion) . "</span>";
 		if ($teamTwitter !== NULL) {
-			echo "Twitter: <a href=\"http://twitter.com/" . $teamTwitter . "\">@".$teamTwitter."</a><br />";
+			echo "<span class='contact-row'>Twitter: <a href=\"http://twitter.com/" . $teamTwitter . "\">@".$teamTwitter."</a></span>";
 		}
 		if ($teamWebsite !== NULL) {
-			echo "Website: <a href=\"" . $teamWebsite . "\">".$teamWebsite."</a><br />";
+			echo "<span class='contact-row'>Website: <a href=\"" . $teamWebsite . "\">".$teamWebsite."</a></span>";
 		}
     if ($teamZipcode !== NULL) {
-			echo "Zipcode: ".$teamZipcode."<br />";
+			echo "<span class='contact-row'>Zipcode: ".$teamZipcode."<span class='contact-row'>";
     }
   }
   else {

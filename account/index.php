@@ -79,10 +79,10 @@
     <div class="panel-heading">
       <h3 class="panel-title"><?php echo $teamName; ?></h3>
     </div>
-    <div class="panel-body">
+    <div class="panel-body act-view">
       <img class="img-thumbnail" src="<?php echo $pic; ?>" alt="Profile Picture" title="Profile Picture"
-           style="width:256px;height:256px;float:left;"/>
-      <div style="float:right;display:block;width:40%">
+           style="width:256px;height:256px;"/>
+      <div>
         <form role="form" id="changeActInfoForm" action="update.php" method="post" enctype="multipart/form-data">
           <div class="panel-group" id="accordion">
             <div class="panel panel-default">
@@ -220,8 +220,9 @@
           </div>
 
           <input name="submt" type="submit" value="Update" class="btn btn-primary" />
+          <a href="team.php?id=<?php echo $_SESSION['teamID']; ?>">Public Profile</a>
         </form>
-        <a href="team.php?id=<?php echo $_SESSION['teamID']; ?>">Public Profile</a>
+
       </div>
     </div>
   </div>

@@ -52,10 +52,10 @@
     <div class="panel-heading">
       <h3 class="panel-title"><?php echo $teamName; ?></h3>
     </div>
-    <div class="panel-body">
+    <div class="panel-body act-view">
       <img class="img-thumbnail" src="<?php echo $pic; ?>" alt="Profile Picture" title="Profile Picture"
            style="width:256px;height:256px;float:left;"/>
-      <div style="float:right;" id="team-contact-info">
+      <div id="team-contact-info">
         <?php
         if ($foundTeam) {
           echo '<button class="btn btn-primary" id="show-team-contact-info">Show contact information</button>';
