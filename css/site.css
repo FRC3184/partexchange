@@ -39,3 +39,12 @@ th {
 .click-indicator {
   text-decoration: underline;
 }
+
+#login-form {
+  display: flex;
+  flex-direction: column;
+}
+#login-form .form-group {
+  margin: auto;
+  max-width: 35em;
+}
