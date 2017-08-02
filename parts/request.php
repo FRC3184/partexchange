@@ -31,14 +31,21 @@
             echo '
                   <div class="alert alert-dismissable alert-danger">
                     <button type="button" class="close" data-dismiss="alert">×</button>
-                    <strong>Error:</strong> Please enter a title
+                    <strong>Error:</strong> Please enter a title.
                   </div>';
           }
           if ($_GET['err'] == "1") {
             echo '
                   <div class="alert alert-dismissable alert-danger">
                     <button type="button" class="close" data-dismiss="alert">×</button>
-                    <strong>Captcha Error:</strong> '.($_GET['txt'] === "invalid-input-response" ? "Please retry the captcha" : $_GET['txt']).'
+                    <strong>Error:</strong> File not recognized as an image.
+                  </div>';
+          }
+          if ($_GET['err'] == "2") {
+            echo '
+                  <div class="alert alert-dismissable alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">×</button>
+                    <strong>Error:</strong> Captcha failed.
                   </div>';
           }
         }

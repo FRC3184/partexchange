@@ -35,7 +35,6 @@ if(isset($_SESSION['logged']) and $_SESSION['logged']){
   catch (Exception $e) {
     die( print_r( $e->getMessage(), true));
   }
-  $rows = $conn->query("SELECT COUNT(*) FROM requests")->fetchColumn();
 
   $dbQuery = "INSERT INTO requests ";
   $values = "(";
@@ -87,12 +86,11 @@ if(isset($_SESSION['logged']) and $_SESSION['logged']){
         || ($_FILES["image"]["type"] == "image/png"))
         && in_array($extension, $allowedExts)) {
       if ($_FILES["image"]["error"] > 0) {
-        header("Location: index.php?err=" . $_FILES["image"]["error"]+2);
+        header("Location: ../parts/request.php?err=1");
         echo "error";
         exit;
       } else {
-        echo "moving";
-        move_uploaded_file($_FILES["image"]["tmp_name"], "../images/".($rows+1).".".$extension);
+
         if ($comma) {
           $values .= ",";
           $fields .= ",";
@@ -103,7 +101,7 @@ if(isset($_SESSION['logged']) and $_SESSION['logged']){
       }
     } else {
       echo "bad file";
-      header("Location: index.php?err=1");
+      header("Location: ../parts/request.php?err=1");
       exit;
     }
   }
@@ -111,6 +109,7 @@ if(isset($_SESSION['logged']) and $_SESSION['logged']){
 
   echo $dbQuery;
   $result = $conn->query($dbQuery);
+  move_uploaded_file($_FILES["image"]["tmp_name"], "../images/".($conn->lastInsertId()).".".$extension);
   $email = setupMail();
   $email->setFrom("part-notify@parts.blazerobotics.org");
   foreach ($mailRecipients as $addr) {
@@ -129,7 +128,7 @@ if(isset($_SESSION['logged']) and $_SESSION['logged']){
   header("Location: ../parts/index.php");
   }
   else {
-    header("Location: /parts/request.php?err=1&txt=" . $resp->$errorCodes[0]);
+    header("Location: /parts/request.php?err=2&txt=" . $resp->$errorCodes[0]);
     exit;
   }
 } else {    //If the form button wasn't submitted go to the index page
