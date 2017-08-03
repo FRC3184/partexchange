@@ -10,8 +10,16 @@ if (isset($_POST['submit'])) {
   catch (Exception $e) {
     die( print_r( $e->getMessage(), true));
   }
+
+
   $usr = $conn->quote($_POST['username']);
-  $pas = hash('sha256', $_POST['password']);
+  $salt_sql = $conn->prepare("SELECT salt FROM teams WHERE teamId=:team");
+  if (!$salt_sql->execute(array(":team" => $_POST['username']))) {
+    header("Location: /account/login.php?err=nomatch");
+    exit;
+  }
+  $salt = $salt_sql->fetchColumn();
+  $pas = hash('sha256', $salt + hash("sha256", $_POST['password']));
   $sql = $conn->query("SELECT * FROM teams WHERE teamId=".$usr." AND password='".$pas."';");
   if ($conn->query("SELECT COUNT(*) FROM teams WHERE teamId=".$usr." AND password='".$pas."';")->fetchColumn() == 1) {
     $row = $sql->fetch(PDO::FETCH_ASSOC);

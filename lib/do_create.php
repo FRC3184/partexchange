@@ -50,7 +50,7 @@ if (!empty($_POST)) {
     }
     $usr = $conn->quote($_POST['teamNumber']);
     if ($conn->query("SELECT COUNT(*) FROM teams
-                      WHERE teamId=".$usr.";")->fetchColumn() == 1) {
+                      WHERE teamId=$usr;")->fetchColumn() == 1) {
       header("Location: /account/create.php?err=3");
       exit;
     }
@@ -62,11 +62,16 @@ if (!empty($_POST)) {
       header("Location: /account/create.php?err=5");
       exit;
     }
-    //TODO figure out this quoting thing
-    $query = "INSERT INTO teams (teamId, teamName, email, password, region) VALUES ('" . $_POST["teamNumber"] . "','" .
-              $_POST["teamName"] . "','" . $_POST["email"] . "','" . hash('sha256', $_POST['password1']) .
-              "', '".$region . "');";
-    $sql = $conn->query($query);
+    $salt = random_bytes(32);
+    $hashed_pass = hash("sha256", $salt + hash("sha256", $_POST['password1']));
+    $query = $conn->prepare("INSERT INTO teams (teamId, teamName, email, password, region, salt)
+                             VALUES (:id, :name, :email, :password, :region, :salt)");
+    $query->execute(array(":id" => $_POST['teamNumber'],
+                          ":name" => $_POST['teamName'],
+                          ":email" => $_POST['email'],
+                          ":password" => $hashed_pass,
+                          ":region" => $region,
+                          ":salt" => $salt));
     header("Location: /account/login.php");
   }
   else {
