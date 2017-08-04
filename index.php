@@ -49,6 +49,7 @@
             <p><a class="btn btn-primary" href="/parts/index.php" role="button">All Open Requests &raquo;</a></p>
           </div>
           <div class="col-sm-4">
+            <p><a class="btn btn-primary" href="/account/history.php?opt=req" role="button">Parts You Requested &raquo;</a></p>
             <p><a class="btn btn-primary" href="/account/history.php?opt=filled" role="button">Requests You Filled &raquo;</a></p>
             <p><a class="btn btn-primary" href="/account/index.php" role="button">Account Settings &raquo;</a></p>
           </div>

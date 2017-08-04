@@ -11,11 +11,11 @@
   require("../lib/database.php");
   $conn = db_connect_access();
 
-  $perPage = 100;
+  $perPage = 30;
   if (isset($_GET['pp'])) {
     $perPage = $_GET['pp'];
   }
-  $maxPages = ceil($conn->query("SELECT COUNT(*) FROM requests WHERE supply_team_id IS NULL")->fetchColumn()/$perPage);
+  $maxPages = ceil($conn->query("SELECT COUNT(*) FROM requests WHERE supply_team_id IS NULL AND verified=1")->fetchColumn()/$perPage);
 
   $start = 0;
   $curPage = 0;
@@ -46,8 +46,14 @@
   if (isset($_GET['like'])) {
     $options .= "&like=" . $_GET['like'];
   }
+  if (isset($_GET['team'])) {
+    $options .= "&team=" . $_GET['team'];
+  }
+  if (isset($_GET['region'])) {
+    $options .= "&region=" . $_GET['region'];
+  }
 
-  echo '
+  echo '<h2>Open Part Requests</h2>
         <ul class="pager">
           <li class="previous ' . $newest .'"><a href="index.php'.$optionsNext.$options.'">← Newer</a></li>
           <li class="next ' . $oldest . '"><a href="index.php'.$optionsPrev.$options.'">Older →</a></li>
@@ -115,7 +121,7 @@
       $requests_sql = $conn->prepare("SELECT idrequests, verified, request_date, request_teamID, description
                                       FROM requests WHERE supply_team_id IS NULL AND description LIKE :search
                                       AND (verified=1 OR :level >= 1 OR request_teamID=:current_team) $team $region
-                                      ORDER BY request_date DESC, idrequests DESC LIMIT $start, $end"); //:end = $start+$perPage;
+                                      ORDER BY request_date DESC, idrequests DESC LIMIT $start, $perPage");
       $requests_sql->execute($query_args);
       while($row = $requests_sql->fetch(PDO::FETCH_ASSOC)) {
 

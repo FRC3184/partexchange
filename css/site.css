@@ -88,3 +88,7 @@ th {
 #createActForm > .form-group {
   min-width: 25em;
 }
+
+li.disabled > a {
+  pointer-events: none;
+}
