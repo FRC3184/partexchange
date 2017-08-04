@@ -214,8 +214,8 @@
             </div>
           </div>
 
-          <input name="submt" type="submit" value="Update" class="btn btn-primary" />
-          <a href="team.php?id=<?php echo $_SESSION['teamID']; ?>">Public Profile</a>
+          <input name="submt" type="submit" value="Update" class="btn btn-primary" /><br />
+          <a href="team.php?id=<?php echo $_SESSION['teamID']; ?>">Show Public Profile</a>
         </form>
 
       </div>

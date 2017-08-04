@@ -22,7 +22,8 @@
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown">'.$_SESSION['teamName'].' <b class="caret"></b></a>
                   <ul class="dropdown-menu">
                     <li><a href="/account/">Account</a></li>
-                    <li><a href="/account/history.php?opt=req">Your Requested Parts</a></li>
+                    <li><a href="/parts/?team='.$_SESSION['teamID'].'">Open Requests</a></li>
+                    <li><a href="/account/history.php?opt=req">Filled Requests</a></li>
                     <li><a href="/account/history.php?opt=filled">Requests You Filled</a></li>
                     <li class="divider"></li>
                     <li><a href="/account/logout.php">Log Out</a></li>
