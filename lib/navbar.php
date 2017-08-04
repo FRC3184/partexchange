@@ -13,7 +13,7 @@
     <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li><a href="/">Home</a></li>
-        <li><a href="/parts/">Open Part Requests</a></li>
+        <li><a href="/parts/">Part Requests</a></li>
         <li><a href="/parts/request.php">Request a Part</a></li>
         <?php
         include("vars.php");
@@ -23,7 +23,7 @@
                   <ul class="dropdown-menu">
                     <li><a href="/account/">Account</a></li>
                     <li><a href="/account/history.php?opt=req">Your Requested Parts</a></li>
-                    <li><a href="/account/history.php?opt=filled">Your Filled Requests</a></li>
+                    <li><a href="/account/history.php?opt=filled">Requests You Filled</a></li>
                     <li class="divider"></li>
                     <li><a href="/account/logout.php">Log Out</a></li>
                   </ul>

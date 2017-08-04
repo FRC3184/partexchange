@@ -44,13 +44,15 @@
       <div class="panel-body">
         <div class="row">
           <div class="col-sm-4">
-            <p><a class="btn btn-primary" href="/parts/index.php" role="button">View Open Requests &raquo;</a></p>
             <p><a class="btn btn-primary" href="/parts/request.php" role="button">Request a Part &raquo;</a></p>
+            <p><a class="btn btn-primary" href="/parts/index.php?team=<?php echo $_SESSION['teamID']; ?>" role="button">Your Open Requests &raquo;</a></p>
+            <p><a class="btn btn-primary" href="/parts/index.php" role="button">All Open Requests &raquo;</a></p>
           </div>
           <div class="col-sm-4">
+            <p><a class="btn btn-primary" href="/account/history.php?opt=filled" role="button">Requests You Filled &raquo;</a></p>
             <p><a class="btn btn-primary" href="/account/index.php" role="button">Account Settings &raquo;</a></p>
-            <p><a class="btn btn-primary" href="/account/history.php?opt=req" role="button">View Requested Parts &raquo;</a></p>
-            <p><a class="btn btn-primary" href="/account/history.php?opt=filled" role="button">View Filled Requests &raquo;</a></p>
+          </div>
+          <div class="col-sm-4">
             <p><a class="btn btn-danger" href="/account/logout.php" role="button">Log Out &raquo;</a></p>
           </div>
         </div>
