@@ -78,3 +78,13 @@ th {
   display: block;
   align-self: flex-end;
 }
+
+#createActForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#createActForm > .form-group {
+  min-width: 25em;
+}

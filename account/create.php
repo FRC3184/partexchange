@@ -40,7 +40,7 @@
   }
   ?>
 
-  <form id="createActForm" role="form" action="../lib/do_create.php" method="post" style="width:50%;">
+  <form id="createActForm" role="form" action="../lib/do_create.php" method="post">
     <div class="form-group">
       <label for="inputTeam">Team Number</label>
       <input required pattern="\d+" name="teamNumber" type="text" class="form-control" id="inputTeam" placeholder="Team Number">
@@ -78,7 +78,7 @@
     <div class="form-group">
       <span id="tos-warning">By clicking "Create Account" you agree to the <a href="/tos.php">Terms of Service</a> for the site</span>
     </div>
-    <div class="col-lg-10 col-lg-offset-2">
+    <div class="form-group">
       <button class="btn btn-primary g-recaptcha" data-sitekey="6LdmZSsUAAAAAKASLeW7JE5w7M1F-5eYxZMbVe8G"
               data-callback="submit_form">Submit</button>
     </div>
