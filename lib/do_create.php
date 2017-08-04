@@ -1,7 +1,7 @@
 <?php
 if (!empty($_POST)) {
   require_once('recaptchalib.php');
-  include "dbinfo.php";
+  require("database.php");
   // reCAPTCHA supported 40+ languages listed here: https://developers.google.com/recaptcha/docs/language
   $lang = "en";
 
@@ -34,28 +34,21 @@ if (!empty($_POST)) {
         exit;
     }
 
-    $name = "".$dbHost . "\\" . $dbInstance . ",1433";
-    try {
-      $conn = new PDO( "mysql:host=$dbHost;dbname=$dbInstance", $dbRW, $dbRWPw);
-      $conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-    }
-    catch (Exception $e) {
-      die( print_r( $e->getMessage(), true));
-    }
+    $conn = db_connect_rw();
 
     //Verify team number
     if (preg_match("/\d+/", $_POST["teamNumber"]) !== 1) {
       header("Location: /account/create.php?err=2");
       exit;
     }
-    $usr = $conn->quote($_POST['teamNumber']);
-    if ($conn->query("SELECT COUNT(*) FROM teams
-                      WHERE teamId=$usr;")->fetchColumn() == 1) {
+    $count_sql = $conn->prepare("SELECT COUNT(*) FROM teams WHERE teamId=:team");
+    $count_sql->execute(array(":team" => $_POST['teamNumber']));
+    if ($count_sql->fetchColumn() == 1) {
       header("Location: /account/create.php?err=3");
       exit;
     }
 
-    include 'region.php';
+    require('region.php');
     //Verify district/region
     $region = $_POST['region'];
     if (!isValidRegion($region)) {

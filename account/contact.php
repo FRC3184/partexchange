@@ -1,19 +1,16 @@
 <?php
-include "../lib/dbinfo.php";
-include "../lib/region.php";
+require("../lib/region.php");
+require("../lib/database.php");
 if (isset($_GET['team'])) {
 	$teamId = $_GET['team'];
-	try {
-		$conn = new PDO( "mysql:host=$dbHost;dbname=$dbInstance", $dbAccess, $dbAccessPw);
-		$conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-	}
-	catch (Exception $e) {
-		die( print_r( $e->getMessage(), true));
-	}
-  $sql = $conn->query("SELECT email, twitter, website, zipcode, region FROM teams
-    					         WHERE teamId=".$conn->quote($teamId)."");
-  if ($conn->query("SELECT COUNT(*) FROM teams WHERE teamId=".$conn->quote($teamId)."")->fetchColumn() == 1) {
-    $row = $sql->fetch();
+	$conn = db_connect_access();
+  $sql_fetch = $conn->prepare("SELECT email, twitter, website, zipcode, region FROM teams
+    					         WHERE teamId=:team");
+  $sql_count = $conn->prepare("SELECT COUNT(*) FROM teams WHERE teamId=:team");
+  $sql_count->execute(array(":team" => $teamId));
+  if ($sql_count->fetchColumn() == 1) {
+    $sql_fetch->execute(array(":team" => $teamId));
+    $row = $sql_fetch->fetch();
     $email = $row['email'];
     $teamTwitter = $row['twitter'];
     $teamWebsite = $row['website'];
@@ -33,8 +30,7 @@ if (isset($_GET['team'])) {
     }
   }
   else {
-    // Because this is an AJAX script, this script shouldn't be called without a team number.
-    // The error condition will have been handled by the parent page
+    echo "Can't find this team.";
   }
 }
 ?>

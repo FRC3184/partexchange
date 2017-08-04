@@ -1,19 +1,12 @@
 <?php
 if (PHP_SAPI !== 'cli') {
-  header("Location: /");  // Keep anyone else from accessing the server
+  header("Location: /");  // Only run on the command line
   exit;
 }
 
-include "lib/dbinfo.php";
-include "lib/mail.php";
-$name = "".$dbHost . "\\" . $dbInstance . ",1433";
-try {
-  $conn = new PDO( "mysql:host=$dbHost;dbname=$dbInstance", $dbAccess, $dbAccessPw);
-  $conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-}
-catch (Exception $e) {
-  die( print_r( $e->getMessage(), true));
-}
+require "lib/database.php";
+require "lib/mail.php";
+$conn = db_connect_access();
 
 // For each user, find what parts were posted in their region
 // We could do this by each region, but this doesn't need to be very efficient and this is simpler

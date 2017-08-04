@@ -1,34 +1,28 @@
 <?php
 if (isset($_POST['username'])) {
-  include "dbinfo.php";
-  include "vars.php";
+  require('database.php');
+  require("vars.php");
 
   if (!$logged) {
     header("Location: part.php?id=".$_POST['id']."&err=0");
   }
 
-  $name = "".$dbHost . "\\" . $dbInstance . ",1433";
-  try {
-    $conn = new PDO( "mysql:host=$dbHost;dbname=$dbInstance", $dbRW, $dbRWPw);
-    $conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-  }
-  catch (Exception $e) {
-    die( print_r( $e->getMessage(), true));
+  if (preg_match("/\d+/", $_POST["username"]) !== 1) {
+    header("Location: /parts/part.php?id=".$_POST['id']."&err=2");
+    exit;
   }
 
-  // Somehow necessary. I don't know why.
-  function fix($id) {
-    return str_replace("''", "'", $id);
-  }
+  $conn = db_connect_rw();
 
-  $query = "SELECT * FROM requests WHERE idrequests=".fix($conn->quote($_POST['id'])) .
-           " AND (request_teamID=".$_SESSION['teamID']." OR " .$_SESSION['level'].">=1)";
-  $result = $conn->query($query);
-  if (sizeof($result) != 1) {
+  $check_sql = $conn->prepare("SELECT COUNT(*) FROM requests WHERE idrequests=:id
+                               AND (request_teamID=:team OR :level>=1)");
+  $check_sql->execute(array(":id" => $_POST['id'], ":team" => $_SESSION['teamID'], ":level" => $_SESSION['level']));
+  if ($check_sql->fetchColumn() != 1) {
     header("Location: /parts/part.php?id=".$_POST['id']."&err=1");
+    exit;
   }
-  $conn->query("UPDATE requests SET supply_team_id=".$conn->quote($_POST['username']).", fulfilled_date=NOW() WHERE idrequests=".
-                $conn->quote($_POST['id']));
+  $mark_sql = $conn->prepare("UPDATE requests SET supply_team_id=:team, fulfilled_date=NOW() WHERE idrequests=:id");
+  $mark_sql->execute(array(":team" => $_POST['username'], ":id" => $_POST['id']));
   header("Location: ../parts/part.php?id=".$_POST['id']);
 
 } else {    //If the form button wasn't submitted go to the index page

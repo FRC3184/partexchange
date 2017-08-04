@@ -1,6 +1,6 @@
 <?php
 require 'mail.php';
-require "dbinfo.php";
+require "database.php";
 session_start();
 if(isset($_SESSION['logged']) and $_SESSION['logged']){
 
@@ -23,56 +23,27 @@ if(isset($_SESSION['logged']) and $_SESSION['logged']){
           $_POST["g-recaptcha-response"]
       );
   }
-  if ($resp != null && $resp->success) {
+  if ($resp != NULL && $resp->success) {
 
-
-
-  $name = "".$dbHost . "\\" . $dbInstance . ",1433";
-  try {
-    $conn = new PDO( "mysql:host=$dbHost;dbname=$dbInstance", $dbRW, $dbRWPw);
-    $conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-  }
-  catch (Exception $e) {
-    die( print_r( $e->getMessage(), true));
-  }
-
-  $dbQuery = "INSERT INTO requests ";
-  $values = "(";
-  $fields = "(";
-  $comma = FALSE;
-  echo sizeof($_FILES);
-
-  $values .= "'".$_SESSION["teamID"]."', NOW(), ";
-  $fields .="request_teamID, request_date, ";
+  $conn = db_connect_rw();
+  $long_desc = NULL;
+  $part_url = NULL;
+  $image_ext = NULL;
 
   if (strlen($_POST['shortDesc']) > 0) {
-    $values .= $conn->quote($_POST['shortDesc']);
-    $fields .= "description";
-    $comma = TRUE;
+    $desc = $_POST['shortDesc'];
   }
   else {
     header("Location: ../parts/request.php?err=0");
     exit;
   }
   if (strlen($_POST['longDesc']) > 0) {
-    if ($comma) {
-      $values .= ",";
-      $fields .= ",";
-    }
-    $values .= $conn->quote($_POST['longDesc']);
-    $fields .= "long_description";
-
-    $comma = TRUE;
+    $long_desc = $_POST['longDesc'];
   }
   if (strlen($_POST['partURL']) > 0) {
-    if ($comma) {
-      $values .= ",";
-      $fields .= ",";
-    }
-    $values .= $conn->quote($_POST['partURL']);
-    $fields .= "site_url";
-    $comma = TRUE;
+    $part_url = $_POST['partURL'];
   }
+  $extension = NULL;
   if (file_exists($_FILES['image']['tmp_name']) || is_uploaded_file($_FILES['image']['tmp_name'])) {
     $allowedExts = array("gif", "jpeg", "jpg", "png");
     $temp = explode(".", $_FILES["image"]["name"]);
@@ -91,13 +62,7 @@ if(isset($_SESSION['logged']) and $_SESSION['logged']){
         exit;
       } else {
 
-        if ($comma) {
-          $values .= ",";
-          $fields .= ",";
-        }
-        $values .= $conn->quote($extension);
-        $fields .= "image_ext";
-        $comma = TRUE;
+        $image_ext = $extension;
       }
     } else {
       echo "bad file";
@@ -105,13 +70,18 @@ if(isset($_SESSION['logged']) and $_SESSION['logged']){
       exit;
     }
   }
-  $dbQuery .= $fields . ") VALUES " . $values . ");";
 
-  echo $dbQuery;
-  $result = $conn->query($dbQuery);
-  move_uploaded_file($_FILES["image"]["tmp_name"], "../images/".($conn->lastInsertId()).".".$extension);
+  $insert_sql = $conn->prepare("INSERT INTO requests
+                                (request_teamID, request_date, description, long_description, site_url, image_ext)
+                                VALUES (:team, NOW(), :description, :long_desc, :url, :image_ext)");
+
+  $insert_sql->execute(array(":team" => $_SESSION['teamID'], ":description" => $desc, ":long_desc" => $long_desc,
+                             ":url" => $part_url, ":image_ext" => $image_ext));
+  if ($extension != NULL) {
+    move_uploaded_file($_FILES["image"]["tmp_name"], "../images/".($conn->lastInsertId()).".".$extension);
+  }
   $email = setupMail();
-  $email->setFrom("part-notify@parts.blazerobotics.org");
+  $email->setFrom("frc.part.exchange@gmail.com");
   foreach ($mailRecipients as $addr) {
     $email->addAddress($addr);
   }

@@ -12,24 +12,22 @@
   if (!isset($_GET['id'])) {
     header("Location: index.php");
   }
-  include "../lib/dbinfo.php";
-  $name = "".$dbHost . "\\" . $dbInstance . ",1433";
-  try {
-    $conn = new PDO( "mysql:host=$dbHost;dbname=$dbInstance", $dbAccess, $dbAccessPw);
-    $conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-  }
-  catch (Exception $e) {
-    die( print_r( $e->getMessage(), true));
-  }
+  include "../lib/database.php";
+  $conn = db_connect_access();
 
-  $ver = " AND verified=1";
+  $level = 0;
+  $team = NULL;
   if ($logged) {
-    $ver = " AND (verified=1 OR ".$_SESSION['level'].">=1 OR request_teamID='".$_SESSION['teamID']."')";
+    $level = $_SESSION['level'];
+    $team = $_SESSION['teamID'];
   }
 
-  $query = "SELECT * FROM requests WHERE idrequests=" . $conn->quote($_GET['id']) . $ver;
-  $result = $conn->query($query);
-  if (sizeof($result) == 1) {
+  $query_sql = $conn->prepare("SELECT COUNT(*), description, request_teamID, supply_team_id, long_description, site_url,
+                               image_ext, request_date FROM requests WHERE idrequests=:id
+                               AND (verified=1 OR :level >= 1 OR request_teamID=:team)");
+  $query_sql->execute(array(":id" => $_GET['id'], ":level" => $level, ":team" => $team));
+  $row = $query_sql->fetch();
+  if ($row[0] == 1) {
   ?>
       <div class="panel panel-primary">
       <div class="panel-heading">
@@ -37,7 +35,6 @@
       </div>
       <div class="panel-body">
         <?php
-        $row = $result->fetch(PDO::FETCH_ASSOC);
 
         echo "<h2>".$row["description"]."</h2>";
         echo "<h3>Requested by <a href=\"/account/team.php?id=".$row["request_teamID"]."\">Team ".$row["request_teamID"]."</a> on ".$row['request_date']."</h3>";

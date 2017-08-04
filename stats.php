@@ -9,21 +9,14 @@
   <?php include 'lib/navbar.php'; ?>
 
   <?php
-  include "lib/dbinfo.php";
-  $name = "".$dbHost . "\\" . $dbInstance . ",1433";
-  try {
-    $conn = new PDO( "mysql:host=$dbHost;dbname=$dbInstance", $dbAccess, $dbAccessPw);
-    $conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-  }
-  catch (Exception $e) {
-    die( print_r( $e->getMessage(), true));
-  }
+  include "lib/database.php";
+  $conn = db_connect_access();
   $allReq = $conn->query("SELECT COUNT(*) FROM requests WHERE verified=1")->fetchColumn();
   $filled = $conn->query("SELECT COUNT(*) FROM requests WHERE verified=1 AND supply_team_id IS NOT NULL")->fetchColumn();
   $teams = $conn->query("SELECT COUNT(*) FROM teams")->fetchColumn();
 
   echo $allReq . " parts have been requested. " . $filled .
-  " (" . ($allReq != 0 ? ($filled/$allReq) : 0). "%) have been filled. "
+  " (" . ($allReq != 0 ? (10 * $filled/$allReq) : 0). "%) have been filled. "
   . $teams . " teams have registered for the site.";
 
   if ($logged and $_SESSION['level'] >= 2) { ?>

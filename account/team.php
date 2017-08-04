@@ -9,27 +9,21 @@
     header("Location: ../index.php");
     exit;
   }
-  include("../lib/vars.php");
-  include("../lib/dbinfo.php");
-  $name = "".$dbHost . "\\" . $dbInstance . ",1433";
-  try {
-    $conn = new PDO( "mysql:host=$dbHost;dbname=$dbInstance", $dbAccess, $dbAccessPw);
-    $conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-  }
-  catch (Exception $e) {
-    die( print_r( $e->getMessage(), true));
-  }
-  $sql = $conn->query("SELECT * FROM teams
-                       WHERE teamId=".$conn->quote($_GET['id'])."");
-  if ($conn->query("SELECT COUNT(*) FROM teams
-                    WHERE teamId=".$conn->quote($_GET['id'])."")->fetchColumn() == 1) {
-    $row = $sql->fetch();
+  require("../lib/vars.php");
+  require("../lib/database.php");
+  $conn = db_connect_access();
+
+  $sql_fetch = $conn->prepare("SELECT teamName, email, teamId, has_profile_pic FROM teams WHERE teamId=:team");
+  $sql_count = $conn->prepare("SELECT COUNT(*) FROM teams WHERE teamId=:team");
+  $sql_count->execute(array(':team' => $_GET['id']));
+  if ($sql_count->fetchColumn() == 1) {
+    $sql_fetch->execute(array(":team" => $_GET['id']));
+    $row = $sql_fetch->fetch();
+
     global $teamName, $email, $teamId, $teamTwitter, $pic, $website;
     $teamName = $row['teamName'];
     $email = $row['email'];
     $teamId = $row['teamId'];
-    $teamTwitter = $row['twitter'];
-    $teamWebsite = $row['website'];
     if ($row['has_profile_pic'] == 1) {
       $pic = "../profile/".$teamId.".png";
     }

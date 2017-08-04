@@ -1,16 +1,8 @@
 <?php
 if (isset($_POST['submit'])) {
-  include "dbinfo.php";
+  require("database.php");
 
-  $name = "".$dbHost . "\\" . $dbInstance . ",1433";
-  try {
-    $conn = new PDO( "mysql:host=$dbHost;dbname=$dbInstance", $dbAccess, $dbAccessPw);
-    $conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-  }
-  catch (Exception $e) {
-    die( print_r( $e->getMessage(), true));
-  }
-
+  $conn = db_connect_access();
 
   $usr = $conn->quote($_POST['username']);
   $salt_sql = $conn->prepare("SELECT salt FROM teams WHERE teamId=:team");
@@ -20,9 +12,10 @@ if (isset($_POST['submit'])) {
   }
   $salt = $salt_sql->fetchColumn();
   $pas = hash('sha256', $salt + hash("sha256", $_POST['password']));
-  $sql = $conn->query("SELECT * FROM teams WHERE teamId=".$usr." AND password='".$pas."';");
-  if ($conn->query("SELECT COUNT(*) FROM teams WHERE teamId=".$usr." AND password='".$pas."';")->fetchColumn() == 1) {
-    $row = $sql->fetch(PDO::FETCH_ASSOC);
+  $sql = $conn->prepare("SELECT COUNT(*), teamId, teamName, level FROM teams WHERE teamId=:team AND password=:password");
+  $sql->execute(array(":team" => $_POST['username'], ":password" => $pas));
+  $row = $sql->fetch();
+  if ($row['0'] == 1) {
     session_start();
     $_SESSION['teamID'] = $row['teamId'];
     $_SESSION['teamName'] = $row['teamName'];

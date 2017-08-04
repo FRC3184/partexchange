@@ -1,31 +1,26 @@
 <?php
-include('dbinfo.php');
+include('database.php');
 include('mail.php');
 
 if (isset($_GET['team'])) {
   $token = uniqid();
   $team = $_GET['team'];
-  try {
-    $conn = new PDO( "mysql:host=$dbHost;dbname=$dbInstance", $dbRW, $dbRWPw);
-    $conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-  }
-  catch (Exception $e) {
-    die( print_r( $e->getMessage(), true));
-  }
-  $teams = $conn->query("SELECT email FROM teams
-                         WHERE teamId=".$conn->quote($team));
-  if (count($teams) !== 1) {
+  $conn = db_connect_rw();
+
+  $find_sql = $conn->prepare("SELECT COUNT(*), email FROM teams WHERE teamId=:team");
+  $find_sql->execute(array(":team" => $team));
+  $result = $find_sql->fetch();
+  if ($result[0] != 1) {
     $content = "Couldn't find that team number";
   }
   else {
-    $query = "INSERT INTO pass_reset (token, teamId, expiration) VALUES
-                  ('".$token."', ".$conn->quote($team).",
-                  NOW() + INTERVAL 15 MINUTE)";
-    $conn->query($query);
+    $token_sql = $conn->prepare("INSERT INTO pass_reset (token, teamId, expiration) VALUES
+                                 (:token, :team, NOW() + INTERVAL 15 MINUTE)");
+    $token_sql->execute(array(":token" => $token, ":team" => $team));
 
     $email = setupMail();
     $email->setFrom("noreply@parts.blazerobotics.org");
-    $email->addAddress($teams->fetchAll()[0]['email']);
+    $email->addAddress($result['email']);
     $email->isHTML(true);
     $email->Subject = "Password reset request for team " . $team;
     $email->Body = "A password reset request was generated for team ".$team." on the Blaze Robotics parts exchange. If you did not generate this request, you can safely ignore this email.<br /><br /><a href='https://parts.blazerobotics.org/account/reset_password.php?token=".$token."'>Reset your password</a>";

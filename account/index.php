@@ -3,24 +3,19 @@
 <head>
   <?php
   $teamName = $email = $teamId = $teamTwitter = $pic = $website = $teamZipcode = NULL;
-  include("../lib/vars.php");
-  include("../lib/dbinfo.php");
+  require("../lib/vars.php");
+  require("../lib/database.php");
   if (!$logged) {
     header("Location: login.php");
   }
-  $name = "".$dbHost . "\\" . $dbInstance . ",1433";
-  try {
-    $conn = new PDO( "mysql:host=$dbHost;dbname=$dbInstance", $dbAccess, $dbAccessPw);
-    $conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-  }
-  catch (Exception $e) {
-    die( print_r( $e->getMessage(), true));
-  }
-  $sql = $conn->query("SELECT * FROM teams
-                       WHERE teamId=".$conn->quote($_SESSION['teamID']));
-  if ($conn->query("SELECT COUNT(*) FROM teams
-                    WHERE teamId=".$conn->quote($_SESSION['teamID']))->fetchColumn() == 1) {
-    $row = $sql->fetch();
+  $conn = db_connect_access();
+  $sql_fetch = $conn->prepare("SELECT teamName, email, teamId, twitter, website, zipcode, gets_emails, has_profile_pic
+                         FROM teams WHERE teamId=:team");
+  $sql_count = $conn->prepare("SELECT COUNT(*) FROM teams WHERE teamId=:team");
+  $sql_count->execute(array(':team' => $_SESSION['teamID']));
+  if ($sql_count->fetchColumn() == 1) {
+    $sql_fetch->execute(array(":team" => $_SESSION['teamID']));
+    $row = $sql_fetch->fetch();
     global $teamName, $email, $teamId, $teamTwitter, $pic, $website, $teamZipcode;
     $teamName = $row['teamName'];
     $email = $row['email'];

@@ -8,15 +8,8 @@
 <body>
   <?php include '../lib/navbar.php'; ?>
   <?php
-  include("../lib/dbinfo.php");
-  $name = "".$dbHost . "\\" . $dbInstance . ",1433";
-  try {
-    $conn = new PDO( "mysql:host=$dbHost;dbname=$dbInstance", $dbAccess, $dbAccessPw);
-    $conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-  }
-  catch (Exception $e) {
-    die( print_r( $e->getMessage(), true));
-  }
+  require("../lib/database.php");
+  $conn = db_connect_access();
 
   $perPage = 100;
   if (isset($_GET['pp'])) {
@@ -91,30 +84,40 @@
     <tbody>
 
       <?php
-      $like = "";
+      $search = "%%";
       if (isset($_GET['like']) and $_GET['like']) {
-        $like = " AND description LIKE " . $conn->quote("%".$_GET['like']."%");
+        $search = "%" . $_GET['like'] . "%";
       }
+      $level = 0;
+      $current_team = NULL;
+      if ($logged) {
+        $level = $_SESSION['level'];
+        $current_team = $_SESSION['teamID'];
+      }
+      $query_args = array(":search" => $search, ":level" => $level, ":current_team" => $current_team);
+
+      $end = $start + $perPage;
 
       $team = "";
+      $teamvar = "";
       if (isset($_GET['team']) and $_GET['team']) {
-        $team = " AND request_teamID=" . $conn->quote($_GET['team']);
+        $team = " AND request_teamID=:team";
+        $query_args = array_merge($query_args, array(":team" => $_GET['team']));
       }
 
       $region = "";
+      $regionvar = "";
       if (isset($_GET['region']) and $_GET['region']) {
-        $region =
-          " AND " . $conn->quote($_GET['region']) . " = (SELECT region FROM teams WHERE teamId = request_teamID)";
+        $region = " AND :region = (SELECT region FROM teams WHERE teamId = request_teamID)";
+        $query_args = array_merge($query_args, array(":region" => $_GET['region']));
       }
 
-      $ver = " AND verified=1";
-      if ($logged) {
-        $ver = " AND (verified=1 OR ".$_SESSION['level'].">=1 OR request_teamID='".$_SESSION['teamID']."')";
-      }
-
-      $result = $conn->query("SELECT * FROM requests WHERE supply_team_id IS NULL".$like.$ver.$team.$region." ORDER BY
-      request_date DESC, idrequests DESC LIMIT ".$start.", ".($start+$perPage));
-      while($row = $result->fetch(PDO::FETCH_ASSOC)) {
+      $requests_sql = $conn->prepare("SELECT idrequests, verified, request_date, request_teamID, description
+                                      FROM requests WHERE supply_team_id IS NULL AND description LIKE :search
+                                      AND (verified=1 OR :level >= 1 OR request_teamID=:current_team) $team $region
+                                      ORDER BY request_date DESC, idrequests DESC LIMIT $start, $end"); //:end = $start+$perPage;
+      $requests_sql->execute($query_args);
+      while($row = $requests_sql->fetch(PDO::FETCH_ASSOC)) {
 
         printf("<tr class='clickable-row%s' data-href='part.php?id=%d'>",
                ($row['verified'] == 1 ? "" : " unverified"), $row['idrequests']);

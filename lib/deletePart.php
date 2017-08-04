@@ -1,18 +1,11 @@
 <?php
-include("dbinfo.php");
+require("database.php");
 session_start();
 
 if (isset($_SESSION['logged']) and $_SESSION['logged'] and isset($_GET['id']) and isset($_SESSION['teamID'])) {
-  try {
-    $conn = new PDO( "mysql:host=$dbHost;dbname=$dbInstance", $dbRW, $dbRWPw);
-    $conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-  }
-  catch (Exception $e) {
-    die( print_r( $e->getMessage(), true));
-  }
-  $dbQuery = "DELETE FROM requests WHERE idrequests=".$conn->quote($_GET['id']) .
-             " AND (request_teamID=".$_SESSION['teamID']." OR " .$_SESSION['level'].">=1)";
-  $conn->query($dbQuery);
+  $conn = db_connect_rw();
+  $sql = $conn->prepare("DELETE FROM requests WHERE idrequests=:id AND (request_teamID=:team OR :level>=1)");
+  $sql->execute(array(':id' => $_GET['id'], 'team' => $_SESSION['teamID'], ':level' => $_SESSION['level']));
 }
 header("Location: /parts/");
 ?>

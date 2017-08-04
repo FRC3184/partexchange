@@ -7,7 +7,10 @@
 </head>
 <body>
   <?php
-    if (!isset($_GET['print'])) {include '../lib/navbar.php';}
+    $PRINT = isset($_GET['print']);
+    $REQUEST = $_GET['opt'] === "req";
+
+    if (!$PRINT) {include '../lib/navbar.php';}
     else {session_start();}
   ?>
 
@@ -16,121 +19,67 @@
     echo "You must be logged in to see this.";
   }
   else {
-    if ($_GET['opt'] == "req") {
-      include("../lib/dbinfo.php");
-      $name = "".$dbHost . "\\" . $dbInstance . ",1433";
-      try {
-        $conn = new PDO( "mysql:host=$dbHost;dbname=$dbInstance", $dbAccess, $dbAccessPw);
-        $conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-      }
-      catch (Exception $e) {
-        die( print_r( $e->getMessage(), true));
-      }
 
-      $result = $conn->query("SELECT * FROM requests WHERE request_teamID='".$_SESSION['teamID']."' AND verified=1
-                              ORDER BY request_date DESC");
-
-      $team = $conn->query("SELECT * FROM teams WHERE teamId='".$_SESSION["teamID"] . "'")->fetch(PDO::FETCH_ASSOC);
-      $usePicture = $team["has_profile_pic"];
-
-      if ($usePicture == 1 && isset($_GET['print'])) {
-        echo '<img style="float:left;width:128px;height:128px;" src="/profile/' . $_SESSION['teamID'] . '.png" />';
-      }
-      if (isset($_GET['print'])) {
-        echo '<img style="position:absolute;right:0;top:0px;width:32px;height:32px;" src="/profile/default.png" />';
-        echo '<img style="position:absolute;right:0;top:32px;width:32px;height:32px;" src="/3184.png" />';
-      }
-      echo '
-            <h2>Parts requested by '.$_SESSION['teamName'].' ' . (!isset($_GET['print']) ? '&nbsp;
-            <a href="history.php?opt=req&print=true">Print</a>' : '') . '</h2>
-            <h3>Total: '.$conn->query("SELECT COUNT(*) FROM requests WHERE request_teamID='" . $_SESSION['teamID'] ."'
-                                       AND verified=1")->fetchColumn().'</h3>
-            <table class="table table-striped table-hover ">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Requester</th>
-                  <th>Description</th>
-                  <th>Fulfilled Team</th>
-                  <th>Fulfilled Date</th>
-                </tr>
-              </thead>
-              <tbody>';
-
-                while($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                    echo "<tr>";
-                    echo "<td>" . $row["request_date"] . "</td>";
-                    echo "<td>Team " . $row["request_teamID"] . "</td>";
-                    echo "<td>" . $row["description"] . "</td>";
-                    echo '<td> ' . $row['supply_team_id'] . '</td>';
-                    echo '<td> ' . $row['fulfilled_date'] . '</td>';
-                    echo "</tr>";
-                }
-                echo '
-              </tbody>
-            </table>';
+    require("../lib/database.php");
+    $conn = db_connect_access();
+    if ($REQUEST) {
+      $result = $conn->prepare("SELECT request_date, request_teamID, description, supply_team_id, fulfilled_date
+                                FROM requests WHERE request_teamID=:team AND verified=1
+                                ORDER BY request_date DESC");
+      $count = $conn->prepare("SELECT COUNT(*) FROM requests WHERE request_teamID=:team AND verified=1");
     }
     else {
-      include("../lib/dbinfo.php");
-      $name = "".$dbHost . "\\" . $dbInstance . ",1433";
-      try {
-        $conn = new PDO( "mysql:host=$dbHost;dbname=$dbInstance", $dbAccess, $dbAccessPw);
-        $conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-      }
-      catch (Exception $e) {
-        die( print_r( $e->getMessage(), true));
-      }
-
-      $result = $conn->query("SELECT * FROM requests WHERE supply_team_id=".$_SESSION['teamID']."
-                              ORDER BY request_date DESC");
-
-      $team = $conn->query("SELECT * FROM teams WHERE teamId=".$_SESSION["teamID"])->fetch(PDO::FETCH_ASSOC);
-      $usePicture = $team["has_profile_pic"];
-
-      if ($usePicture == 1 && isset($_GET['print'])) {
-        echo '<img style="float:left;width:128px;height:128px;" src="/profile/' . $_SESSION['teamID'] . '.png" />';
-      }
-      if (isset($_GET['print'])) {
-        echo '<img style="position:absolute;right:0;top:0;width:32px;height:32px;" src="/profile/default.png" />';
-        echo '<img style="position:absolute;right:0;top:32px;width:32px;height:32px;" src="/3184.png" />';
-
-      }
-
-      echo '
-            <h2>Requests filled by ' . $_SESSION["teamName"] . ' ' . (!isset($_GET['print']) ? '&nbsp;
-            <a href="history.php?opt=filled&print=true">Print</a>' : '') . '</h2>
-            <h3>Total: '.$conn->query("SELECT COUNT(*) FROM requests WHERE
-                                       supply_team_id='" . $_SESSION['teamID'] . "'")->fetchColumn().'</h3>
-            <table class="table table-striped table-hover ">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Requester</th>
-                  <th>Description</th>
-                  <th>Fulfilled Team</th>
-                  <th>Fulfilled Date</th>
-                </tr>
-              </thead>
-              <tbody>';
-                while($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                    echo "<tr>";
-                    echo "<td>" . $row["request_date"] . "</td>";
-                    echo "<td>Team " . $row["request_teamID"] . "</td>";
-                    echo "<td>" . $row["description"] . "</td>";
-                    echo '<td> ' . $row['supply_team_id'] . '</td>';
-                    echo '<td> ' . $row['fulfilled_date'] . '</td>';
-                    echo "</tr>";
-                }
-              echo '
-              </tbody>
-            </table>';
-        }
-      if (isset($_GET['print'])) {
-        echo '<script type="text/javascript">window.print()</script>';
-      }
+      $result = $conn->prepare("SELECT request_date, request_teamID, description, supply_team_id, fulfilled_date
+                                FROM requests WHERE supply_team_id=:team AND verified=1
+                                ORDER BY request_date DESC");
+      $count = $conn->prepare("SELECT COUNT(*) FROM requests WHERE supply_team_id=:team AND verified=1");
     }
+    $result->execute(array(":team" => $_SESSION['teamID']));
+    $count->execute(array(":team" => $_SESSION['teamID']));
+
+    $usePic_sql = $conn->prepare("SELECT has_profile_pic FROM teams WHERE teamId=:team");
+    $usePic_sql->execute(array(":team" => $_SESSION['teamID']));
+    $usePicture = $usePic_sql->fetchColumn() == 1;
+
+    if ($usePicture && $PRINT) {
+      echo '<img style="float:left;width:128px;height:128px;" src="/profile/' . $_SESSION['teamID'] . '.png" />';
+    }
+    if ($PRINT) {
+      echo '<img style="position:absolute;right:0;top:0px;width:32px;height:32px;" src="/profile/default.png" />';
+      echo '<img style="position:absolute;right:0;top:32px;width:32px;height:32px;" src="/3184.png" />';
+    }
+    echo '
+          <h2>Parts '.($REQUEST ? "requested" : "filled").' by '.$_SESSION['teamName'].' ' . (!$PRINT ? '&nbsp;
+          <a href="history.php?opt='.($REQUEST ? "req" : "filled").'&print=true">Print</a>' : '') . '</h2>
+          <h3>Total: '.$count->fetchColumn().'</h3>
+          <table class="table table-striped table-hover ">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Requester</th>
+                <th>Description</th>
+                <th>Fulfilled Team</th>
+                <th>Fulfilled Date</th>
+              </tr>
+            </thead>
+            <tbody>';
+
+              while($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                  echo "<tr>";
+                  echo "<td>" . $row["request_date"] . "</td>";
+                  echo "<td>Team " . $row["request_teamID"] . "</td>";
+                  echo "<td>" . $row["description"] . "</td>";
+                  echo '<td> ' . $row['supply_team_id'] . '</td>';
+                  echo '<td> ' . $row['fulfilled_date'] . '</td>';
+                  echo "</tr>";
+              }
+              echo '
+            </tbody>
+          </table>';
+
+        }
     ?>
 
-    <?php if (!isset($_GET['print'])) {include '../lib/foot.html'; } ?>
+    <?php if (!$PRINT) {include '../lib/foot.html'; } ?>
 </body>
 </html>

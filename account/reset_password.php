@@ -1,27 +1,25 @@
 <?php
-  include("../lib/dbinfo.php");
+  require("../lib/database.php");
   $token = null;
-  try {
-  $conn = new PDO( "mysql:host=$dbHost;dbname=$dbInstance", $dbAccess, $dbAccessPw);
-  $conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-  }
-  catch (Exception $e) {
-    die( print_r( $e->getMessage(), true));
-  }
+  $conn = db_connect_rw();
   if (isset($_POST['token']) && isset($_POST['password'])) {
-    $token = $conn->quote($_POST['token']);
+    $token = $_POST['token'];
     $password = $_POST['password'];
 
-    $res = $conn->query("SELECT teamId FROM pass_reset WHERE token=".$token."
-                         AND expiration > NOW()")->fetchAll();
+    $update_sql = $conn->prepare("UPDATE teams SET password=:password, salt=:salt WHERE teamId=:team");
+
+    $token_sql = $conn->prepare("SELECT teamId FROM pass_reset WHERE token=:token AND expiration > NOW()");
+    $token_sql->execute(array(":token" => $token));
+    $res = $token_sql->fetchAll();
     if (count($res) !== 1) {
       $content = "Your reset link has expired. Please try again.";
     }
     else {
-      $teamId = $conn->quote($res[0][0]);
-      $query = "UPDATE teams SET password='".hash("sha256", $password)."'
-                    WHERE teamId=".$teamId;
-      $conn->query($query);
+      $salt = random_bytes(32);
+      $hashed_pass = hash("sha256", $salt + hash("sha256", $password));
+      $teamId = $res[0][0];
+      $update_sql->execute(array(":password" => $hashed_pass, ":salt" => $salt, ":team" => $teamId));
+
       $content = "Your password has been successfully reset. You may now log in.";
     }
   }
