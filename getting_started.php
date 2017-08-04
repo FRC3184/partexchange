@@ -21,7 +21,6 @@
     <h3>Request a Part</h3>
     <p id="request-prt">You can request parts by clicking <a href="/parts/request.php">here</a> or the link at the top of the page.
       Note that you can add the title of your request, a description of the required part, a link to the manufacturer's website, and a picture of the part.
-      Every part request must be verified manually. Until the request is verified, it will be visible only to you and have a red outline indicating this.
       <br /><br />When another team gets you the part, make sure to mark it as filled so they get credit.</p>
   </div>
 
