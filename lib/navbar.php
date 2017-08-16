@@ -16,7 +16,7 @@
         <li><a href="/parts/">Part Requests</a></li>
         <li><a href="/parts/request.php">Request a Part</a></li>
         <?php
-        include("vars.php");
+        
         if($logged){
           echo '<li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown">'.$_SESSION['teamName'].' <b class="caret"></b></a>

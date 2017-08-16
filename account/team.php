@@ -1,3 +1,4 @@
+<?php include("vars.php"); ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,7 +10,6 @@
     header("Location: ../index.php");
     exit;
   }
-  require("../lib/vars.php");
   require("../lib/database.php");
   $conn = db_connect_access();
 

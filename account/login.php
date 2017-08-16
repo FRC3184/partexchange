@@ -1,3 +1,4 @@
+<?php include("vars.php"); ?>
 <!DOCTYPE html>
 <html>
 <head>
