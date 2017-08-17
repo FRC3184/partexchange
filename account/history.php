@@ -27,7 +27,8 @@
       $result = $conn->prepare("SELECT request_date, request_teamID, description, supply_team_id, fulfilled_date
                                 FROM requests WHERE request_teamID=:team AND verified=1 AND supply_team_id IS NOT NULL
                                 ORDER BY request_date DESC");
-      $count = $conn->prepare("SELECT COUNT(*) FROM requests WHERE request_teamID=:team AND verified=1");
+      $count = $conn->prepare("SELECT COUNT(*) FROM requests WHERE request_teamID=:team AND verified=1 AND
+                               supply_team_id IS NOT NULL");
     }
     else {
       $result = $conn->prepare("SELECT request_date, request_teamID, description, supply_team_id, fulfilled_date
