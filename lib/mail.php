@@ -16,6 +16,7 @@ function setupMail() {
   $mail->Password = $mailPass;                           // SMTP password
   $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
   $mail->Port = $mailPort;  // TCP port to connect to
+  $mail->setFrom($mailUser);
   return $mail;
 }
 

@@ -28,7 +28,6 @@ while($team = $teams->fetch(PDO::FETCH_ASSOC)) {
   $unfilled = $total - $filled;
 
   $email = setupMail();
-  $email->setFrom("frc.part.exchange@gmail.com");
   $email->addAddress($team['email']);
   $email->isHTML(true);
 

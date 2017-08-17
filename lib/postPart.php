@@ -81,7 +81,6 @@ if(isset($_SESSION['logged']) and $_SESSION['logged']){
     move_uploaded_file($_FILES["image"]["tmp_name"], "../images/".($conn->lastInsertId()).".".$extension);
   }
   $email = setupMail();
-  $email->setFrom("frc.part.exchange@gmail.com");
   foreach ($mailRecipients as $addr) {
     $email->addAddress($addr);
   }
