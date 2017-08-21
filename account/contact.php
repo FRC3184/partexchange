@@ -4,7 +4,7 @@ require("../lib/database.php");
 if (isset($_GET['team'])) {
 	$teamId = $_GET['team'];
 	$conn = db_connect_access();
-  $sql_fetch = $conn->prepare("SELECT email, twitter, website, zipcode, region FROM teams
+  $sql_fetch = $conn->prepare("SELECT email, twitter, website, region FROM teams
     					         WHERE teamId=:team");
   $sql_count = $conn->prepare("SELECT COUNT(*) FROM teams WHERE teamId=:team");
   $sql_count->execute(array(":team" => $teamId));
@@ -14,7 +14,6 @@ if (isset($_GET['team'])) {
     $email = $row['email'];
     $teamTwitter = $row['twitter'];
     $teamWebsite = $row['website'];
-    $teamZipcode = $row['zipcode'];
     $teamRegion = $row['region'];
 
     echo "<span class='contact-row'>Email: <a href=\"mailto:".$email."\">" . $email . "</a></span>";
@@ -25,9 +24,6 @@ if (isset($_GET['team'])) {
 		if ($teamWebsite !== NULL) {
 			echo "<span class='contact-row'>Website: <a href=\"" . $teamWebsite . "\">".$teamWebsite."</a></span>";
 		}
-    if ($teamZipcode !== NULL) {
-			echo "<span class='contact-row'>Zipcode: ".$teamZipcode."<span class='contact-row'>";
-    }
   }
   else {
     echo "Can't find this team.";

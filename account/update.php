@@ -8,7 +8,7 @@ if (!$logged) {
 if (!empty($_POST)) {
   include "../lib/database.php";
   $conn = db_connect_rw();
-  $old_values_sql = $conn->prepare("SELECT email, twitter, website, zipcode, gets_emails, has_profile_pic, password, salt
+  $old_values_sql = $conn->prepare("SELECT email, twitter, website, gets_emails, has_profile_pic, password, salt
                                     FROM teams WHERE teamId=:team");
   $old_values_sql->execute(array(':team' => $_SESSION['teamID']));
   $old_values = $old_values_sql->fetch();
@@ -16,7 +16,6 @@ if (!empty($_POST)) {
   $email = $old_values['email'];
   $twitter = $old_values['twitter'];
   $website = $old_values['website'];
-  $zipcode = $old_values['zipcode'];
   $gets_emails = $old_values['gets_emails'];
   $has_profile_pic = $old_values['has_profile_pic'];
   $password = $old_values['password'];
@@ -34,9 +33,6 @@ if (!empty($_POST)) {
   }
   if (strlen($_POST['website']) > 0) {
     $website = $_POST['website'];
-  }
-  if (strlen($_POST['zipcode']) > 0) {
-    $zipcode = $_POST['zipcode'];
   }
 
   //Gets emails
@@ -90,7 +86,6 @@ if (!empty($_POST)) {
                                 email=:email,
                                 twitter=:twitter,
                                 website=:website,
-                                zipcode=:zipcode,
                                 gets_emails=:gets_emails,
                                 has_profile_pic=:has_profile_pic,
                                 password=:password,
@@ -98,7 +93,6 @@ if (!empty($_POST)) {
   $update_sql->execute(array(':email' => $email,
                              ':twitter' => $twitter,
                              ':website' => $website,
-                             ':zipcode' => $zipcode,
                              ':gets_emails' => $gets_emails,
                              ':has_profile_pic' => $has_profile_pic,
                              ':password' => $password,

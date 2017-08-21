@@ -10,7 +10,7 @@
     header("Location: login.php");
   }
   $conn = db_connect_access();
-  $sql_fetch = $conn->prepare("SELECT teamName, email, teamId, twitter, website, zipcode, gets_emails, has_profile_pic
+  $sql_fetch = $conn->prepare("SELECT teamName, email, teamId, twitter, website, gets_emails, has_profile_pic
                          FROM teams WHERE teamId=:team");
   $sql_count = $conn->prepare("SELECT COUNT(*) FROM teams WHERE teamId=:team");
   $sql_count->execute(array(':team' => $_SESSION['teamID']));
@@ -23,7 +23,6 @@
     $teamId = $row['teamId'];
     $teamTwitter = $row['twitter'];
     $teamWebsite = $row['website'];
-    $teamZipcode = $row['zipcode'];
     $teamGetsEmails = $row['gets_emails'] == 1;
     if ($row['has_profile_pic'] == 0) {
       $pic = "../profile/default.png";
@@ -183,31 +182,6 @@
                     <input type="password" name="newpass" class="form-control" id="newpass">
                     <label for="confirmpass">Confirm New Password</label>
                     <input data-match="#newpass" type="password" name="confirmpass" class="form-control" id="confirmpass">
-                    <div class="help-block with-errors"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <h4 class="panel-title">
-                  <a data-toggle="collapse" data-parent="#accordion" href="#setZipcode">
-                    <?php
-                    if ($teamZipcode !== NULL) {
-                      echo "Zipcode: ". $teamZipcode;
-                    }
-                    else {
-                      echo "Zipcode: <i>Not Set.</i>";
-                    }
-                    ?>
-                  </a>
-                </h4>
-              </div>
-              <div id="setZipcode" class="panel-collapse collapse">
-                <div class="panel-body">
-                  <div class="form-group">
-                    <input data-error="Invalid zipcode format" class="form-control" pattern="\d+"
-                           type="text" name="zipcode" class="form-control" id="zipcode" placeholder="Zipcode">
                     <div class="help-block with-errors"></div>
                   </div>
                 </div>
