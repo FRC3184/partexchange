@@ -49,7 +49,7 @@
   }
 ?>
 
-<?php include("vars.php"); ?>
+<?php require($_SERVER['DOCUMENT_ROOT'] . "/lib/vars.php"); ?>
 <!DOCTYPE html>
 <html>
 <head>

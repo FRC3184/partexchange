@@ -34,7 +34,7 @@ if (isset($_GET['team'])) {
   $content = "Please enter a team number.";
 }
 ?>
-<?php include("vars.php"); ?>
+<?php require($_SERVER['DOCUMENT_ROOT'] . "/lib/vars.php"); ?>
 <!DOCTYPE html>
 <html>
 <head>
