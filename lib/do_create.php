@@ -65,7 +65,12 @@ if (!empty($_POST)) {
                           ":password" => $hashed_pass,
                           ":region" => $region,
                           ":salt" => $salt));
-    header("Location: /account/login.php");
+    session_start();
+    $_SESSION['teamID'] = $_POST['teamNumber'];
+    $_SESSION['teamName'] = $_POST['teamName'];
+    $_SESSION['logged'] = TRUE;
+    $_SESSION['level'] = 0; // Default level. Only changed manually.
+    header("Location: /account/");
   }
   else {
     header("Location: /account/create.php?err=4&txt=" . $resp->$errorCodes[0]);
