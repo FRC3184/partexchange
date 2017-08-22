@@ -1,0 +1,4 @@
+images/*
+profile/*
+lib/secrets.php
+lib/mailVars.php
