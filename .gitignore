@@ -3,3 +3,4 @@ profile/*
 lib/secrets.php
 lib/mailVars.php
 info.php
+phpmyadmin/*
