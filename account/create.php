@@ -48,11 +48,6 @@
       <div class="help-block with-errors"></div>
     </div>
     <div class="form-group">
-      <label for="inputTeamName">Team Name</label>
-      <input required name="teamName" type="text" class="form-control" id="inputTeamName" placeholder="Team Name">
-      <div class="help-block with-errors"></div>
-    </div>
-    <div class="form-group">
       <label for="inputRegion">Region</label>
       Choose district, state/province, or country.
       <select required name="region" class="form-control" id="inputRegion">

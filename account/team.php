@@ -1,4 +1,5 @@
 <?php require($_SERVER['DOCUMENT_ROOT'] . "/lib/vars.php"); ?>
+<?php require($_SERVER['DOCUMENT_ROOT'] . "/lib/secrets.php"); ?>
 <!DOCTYPE html>
 <html>
 <head>

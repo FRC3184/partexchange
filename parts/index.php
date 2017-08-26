@@ -60,19 +60,41 @@
           <li class="next ' . $oldest . '"><a href="index.php'.$optionsPrev.$options.'">Older →</a></li>
         </ul>';
   ?>
-  <form method="GET" action="index.php">
-    <div class="input-group" style="display: inline-flex; width:100%; justify-content:center;">
+  <form method="GET" action="index.php" style="width: 100%">
+    <div class="input-group" style="display: flex; width:100%; justify-content:center; flex-wrap: wrap">
       <input value="<?php echo isset($_GET['like']) ? $_GET['like'] : ''; ?>" type="text" name="like"
-             class="form-control" style="width: 45%; max-width: 20em;" placeholder="Title" />
+             class="form-control" style="width: 20em;" placeholder="Title" />
       <input value="<?php echo isset($_GET['team']) ? $_GET['team'] : ''; ?>" type="text" name="team"
-             class="form-control" style="width: 20%; max-width: 6em;" placeholder="Team #" />
-      <select name="region" class="form-control" style="width: 30%; max-width: 9em;">
+             class="form-control" style="width: 6em;" placeholder="Team #" />
+      <select name="region" class="form-control" style="width: 9em;">
         <?php
         include "../lib/region.php";
         printRegionSelect(isset($_GET['region']) ? $_GET['region'] : '', True);
         ?>
       </select>
       <?php
+      if ($logged) {
+        echo "<select type='number' name='nearby' class='form-control' style='width: 8em'>";
+        $nearby = isset($_GET['nearby']) ? $_GET['nearby'] : 0;
+        if ($nearby == 0) {
+          echo "<option value='' selected>Distance</option>";
+        }
+        else {
+          echo "<option value=''>Distance</option>";
+        }
+        foreach (array(10, 20, 50) as $dist) {
+          if ($nearby == $dist) {
+            echo "<option value='$dist' selected>$dist Miles</option>";
+          }
+          else {
+            echo "<option value='$dist'>$dist Miles</option>";
+          }
+        }
+        echo "</select>";
+      }
+      else {
+        $nearby = 0;
+      }
       if (isset($_GET['pp'])) {
         echo "<input type='hidden' value='".$perPage."' name='pp'>";
       }
@@ -106,22 +128,26 @@
       $end = $start + $perPage;
 
       $team = "";
-      $teamvar = "";
       if (isset($_GET['team']) and $_GET['team']) {
         $team = " AND request_teamID=:team";
         $query_args = array_merge($query_args, array(":team" => $_GET['team']));
       }
 
       $region = "";
-      $regionvar = "";
       if (isset($_GET['region']) and $_GET['region']) {
         $region = " AND :region = (SELECT region FROM teams WHERE teamId = request_teamID)";
         $query_args = array_merge($query_args, array(":region" => $_GET['region']));
       }
+      
+      $miles = "";
+      if ($nearby != 0) {
+        $miles = " AND calc_distance(:current_team, request_teamID) < :nearby";
+        $query_args = array_merge($query_args, array(":nearby" => $nearby));
+      }
 
       $requests_sql = $conn->prepare("SELECT idrequests, verified, request_date, request_teamID, description
                                       FROM requests WHERE supply_team_id IS NULL AND description LIKE :search
-                                      AND (verified=1 OR :level >= 1 OR request_teamID=:current_team) $team $region
+                                      AND (verified=1 OR :level >= 1 OR request_teamID=:current_team) $team $region $miles
                                       ORDER BY request_date DESC, idrequests DESC LIMIT $start, $perPage");
       $requests_sql->execute($query_args);
       while($row = $requests_sql->fetch(PDO::FETCH_ASSOC)) {
