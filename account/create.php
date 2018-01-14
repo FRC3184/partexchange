@@ -76,7 +76,7 @@
     </div>
     <div class="form-group">
       <button class="btn btn-primary g-recaptcha" data-sitekey="6LdmZSsUAAAAAKASLeW7JE5w7M1F-5eYxZMbVe8G"
-              data-callback="submit_form">Submit</button>
+              data-callback="submit_form">Create Account</button>
     </div>
     <script>
     function submit_form() {
