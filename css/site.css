@@ -92,3 +92,21 @@ th {
 li.disabled > a {
   pointer-events: none;
 }
+
+.img-preview-block {
+  border: 1px solid black;
+  border-radius: 3px;
+  max-width: 400px;
+  text-align: center;
+  padding: 5px;
+  display: none;
+  margin: auto;
+}
+
+#preview {
+  max-width: 100%;
+}
+
+#image-upload {
+  display: none;
+}

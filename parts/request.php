@@ -49,12 +49,19 @@
                     <strong>Error:</strong> Captcha failed.
                   </div>';
           }
+          if ($_GET['err'] == "3") {
+            echo '
+                  <div class="alert alert-dismissable alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">×</button>
+                    <strong>Error:</strong> File too large
+                  </div>';
+          }
         }
         ?>
         <form action="../lib/postPart.php" method="post" enctype="multipart/form-data" id="part_form">
           <div class="form-group">
-            <input placeholder="Title" name="shortDesc" type="text" class="form-control" id="inputSDesc" autocomplete="off">
-
+            <input required placeholder="Title" name="shortDesc" type="text" class="form-control" id="inputSDesc" autocomplete="off">
+            <div class="help-block with-errors"></div>
           </div>
 
           <div class="form-group">
@@ -62,12 +69,16 @@
 
           </div>
           <div class="form-group">
-            <input placeholder="Link to website (not required)" name="partURL" type="text" class="form-control" id="partURL" autocomplete="off">
-
+            <input placeholder="Link to website (not required)" name="partURL" type="url" class="form-control" id="partURL" autocomplete="off">
+            <div class="help-block with-errors"></div>
           </div>
           <div class="form-group">
-            <input type="file" name="image" class="form-control" id="image-upload" accept="image/*">
-
+            <a class="btn btn-primary" id="btn-attach">Attach Image (4MB max)</a>
+            <input data-maxsize="4194304" type="file" name="image" class="form-control" id="image-upload" accept="image/*">
+            <div class="help-block with-errors"></div>
+            <div class="img-preview-block">
+              <img id="preview" />
+            </div>
           </div>
 
           <div class="col-lg-10 col-lg-offset-2">
@@ -88,5 +99,46 @@
 
 
   <?php include '../lib/foot.html'; ?>
+
+  <script type="text/javascript" src="/js/validator.min.js"></script>
+
+  <script type="text/javascript">
+    $("#part_form").validator({custom: {
+      maxsize: function($el) {
+        var maxSize = parseInt($el.data("maxsize"));
+        if ($el[0].files[0].size > maxSize) {
+          return "File too large";
+        }
+      }
+    }});
+
+    $("#btn-attach").click(function() {
+      var $fileobj = $("#image-upload");
+      if ($fileobj[0].files.length == 0) {
+        $fileobj.trigger("click");
+      }
+      else {
+        $fileobj.val("");
+        $fileobj.trigger("change");
+      }
+    });
+
+    $("#image-upload").change(function() {
+      var $fileobj = $("#image-upload");
+      var $btn = $("#btn-attach");
+      var $preview = $("#preview");
+      var $preview_block = $preview.parent();
+      if ($fileobj[0].files.length > 0) {
+        $btn.html("Remove Image");
+        $preview.attr("src", URL.createObjectURL($fileobj[0].files[0]));
+        $preview_block.css("display", "block");
+      }
+      else {
+        $btn.html("Attach Image (4MB max)");
+        $preview.attr("src", "");
+        $preview_block.css("display", "none");
+      }
+    });
+  </script>
 </body>
 </html>
