@@ -20,6 +20,8 @@ function setupMail() {
   return $mail;
 }
 
+$unsubscribe_info = "<br />You can disable these emails on your <a href='https://parts.blazerobotics.org/account'>account settings page</a>.";
+
 function send($mail) {
   if(!$mail->send()) {
       return $mail->ErrorInfo;

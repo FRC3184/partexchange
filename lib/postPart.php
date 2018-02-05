@@ -80,18 +80,22 @@ if(isset($_SESSION['logged']) and $_SESSION['logged']){
   if ($extension != NULL) {
     move_uploaded_file($_FILES["image"]["tmp_name"], "../images/".($conn->lastInsertId()).".".$extension);
   }
-  $email = setupMail();
-  foreach ($mailRecipients as $addr) {
-    $email->addAddress($addr);
-  }
-  $email->isHTML(true);
 
-  $email->Subject = "Team " . $_SESSION['teamID'] . " requested a part: " . $_POST['shortDesc'];
-  $email->Body = $_POST['longDesc'] . '<br /><a href="parts.blazerobotics.org/parts/part.php?id=' . ($conn->lastInsertId()) . '">Click here to view</a>';
-
-  $res = send($email);
-  if ($res) {
-    die($res);
+  $find_recipients_sql = $conn->prepare("SELECT email FROM teams WHERE 
+                                         region=(SELECT region FROM teams WHERE teamId=:req_team) 
+                                         AND gets_emails=1 AND teamId<>:req_team");
+  $find_recipients_sql->execute(array(":req_team" => $_SESSION['teamID']));
+  while ($team = $find_recipients_sql->fetch(PDO::FETCH_ASSOC)) {
+    echo $team;
+    $email = setupMail();
+    $email->addAddress($team['email']);
+    $email->isHTML(true);
+    $email->Subject = "Team " . $_SESSION['teamID'] . " requested a part: " . $_POST['shortDesc'];
+    $email->Body = $_POST['longDesc'] . '<br /><a href="parts.blazerobotics.org/parts/part.php?id=' . ($conn->lastInsertId()) . '">Click here to view</a>' . $unsubscribe_info;
+    $res = send($email);
+    if ($res) {
+      die($res);
+    }
   }
 
   header("Location: ../parts/index.php");

@@ -34,9 +34,8 @@ while($team = $teams->fetch(PDO::FETCH_ASSOC)) {
   $email->Subject = "FRC Part Exchange Weekly Digest";
   $email->Body = sprintf("
   Last week, %d parts were requested in your region. %d of them have not been filled.<br />
-  <a href='https://parts.blazerobotics.org/parts/?region=%s'>View open part requests in your region.</a><br /><br />
-  You can opt out of these emails on your user profile.
-  ", $total, $unfilled, $region);
+  <a href='https://parts.blazerobotics.org/parts/?region=%s'>View open part requests in your region.</a><br />.
+  " . $unsubscribe_info, $total, $unfilled, $region);
 
   $res = send($email);
   if ($res) {
