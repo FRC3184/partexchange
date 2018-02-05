@@ -73,8 +73,30 @@
             <div class="help-block with-errors"></div>
           </div>
           <div class="form-group">
-            <a class="btn btn-primary" id="btn-attach">Attach Image (4MB max)</a>
-            <input data-maxsize="4194304" type="file" name="image" class="form-control" id="image-upload" accept="image/*">
+            <?php
+            function return_bytes($val) {
+              $val = trim($val);
+              $last = strtolower($val[strlen($val)-1]);
+              switch($last) {
+                  // The 'G' modifier is available since PHP 5.1.0
+                  case 'g':
+                      $val *= (1024 * 1024 * 1024); //1073741824
+                      break;
+                  case 'm':
+                      $val *= (1024 * 1024); //1048576
+                      break;
+                  case 'k':
+                      $val *= 1024;
+                      break;
+              }
+
+              return $val;
+            }
+            $pretty_size = ini_get('post_max_size');
+            $bytes = return_bytes($pretty_size);
+            ?>
+            <a class="btn btn-primary" id="btn-attach">Attach Image (<?php echo $pretty_size ?> max)</a>
+            <input data-maxsize="<?php echo $bytes; ?>" type="file" name="image" class="form-control" id="image-upload" accept="image/*">
             <div class="help-block with-errors"></div>
             <div class="img-preview-block">
               <img id="preview" />
